@@ -2,8 +2,7 @@
 
 #include "settings.h"
 #include "AppexConnector/AppexConnector.h"
-
-String cmdId = "-1";
+#include "CmdsProcessor/CmdsProcessor.h"
 
 void appexCallback(std::unordered_map<std::string, std::string> & state);
 
@@ -15,6 +14,8 @@ std::unordered_map<std::string, std::string> initialState = {
 };
 
 AppexConnector appex(roomIDSetting, roomPassSetting, initialState, appexCallback);
+
+CmdsProcessor cmdsProcessor;
 
 void setup() {
     // запускаем Serial порт
@@ -41,6 +42,7 @@ void loop() {
     appex.tick();
 }
 
+String cmdId = "-1";
 void appexCallback(std::unordered_map<std::string, std::string> & state) {
 
     String id = state.at("cmdId").c_str();
@@ -50,18 +52,10 @@ void appexCallback(std::unordered_map<std::string, std::string> & state) {
     cmdId = id;
 
     String cmd = state.at("cmdToEsp").c_str();
-    String ans;
+    String ans = cmdsProcessor.processCmds(cmd);
 
     Serial.print("> ");
     Serial.println(cmd);
-
-    if (cmd == "hello") {
-        ans = "Hello world!";
-    } else if (cmd == "appex") {
-        ans = "is the best remote control system!";
-    } else {
-        ans = "Unknown command";
-    }
 
     // Отвечаем на команду
     DynamicJsonDocument doc(1024);
