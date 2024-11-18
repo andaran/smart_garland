@@ -1,8 +1,12 @@
 #include <Arduino.h>
+#include <Adafruit_NeoPixel.h>
 
 #include "settings.h"
 #include "AppexConnector/AppexConnector.h"
 #include "CmdsProcessor/CmdsProcessor.h"
+#include "EffectsProcessor/EffectsProcessor.h"
+
+Adafruit_NeoPixel * strip = new Adafruit_NeoPixel(NUM_LEDS, LED_PIN, NEO_GRB + NEO_KHZ800);
 
 void appexCallback(std::unordered_map<std::string, std::string> & state);
 
@@ -15,12 +19,17 @@ std::unordered_map<std::string, std::string> initialState = {
 
 AppexConnector appex(roomIDSetting, roomPassSetting, initialState, appexCallback);
 
+EffectsProcessor effectsProcessor(strip);
 CmdsProcessor cmdsProcessor;
 
 void setup() {
     // запускаем Serial порт
     Serial.begin(115200);
     Serial.setDebugOutput(false);
+
+    // настраиваем ленту
+    strip->begin();
+    strip->show();
 
     // подключаемся к WiFi
     WiFi.begin(ussid, pass);
@@ -40,6 +49,7 @@ void setup() {
 
 void loop() {
     appex.tick();
+    effectsProcessor.tick();
 }
 
 String cmdId = "-1";
