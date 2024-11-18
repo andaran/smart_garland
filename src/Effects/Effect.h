@@ -3,19 +3,18 @@
 #include <Arduino.h>
 #include <Adafruit_NeoPixel.h>
 
+#include "../Strip/StripProcessor.h"
 #include "settings.h"
  
 class Effect {
 public:
-    Effect(Adafruit_NeoPixel * strip, unsigned long timeout);
+    Effect(StripProcessor * strip, unsigned long timeout);
 
     void tick();
     virtual void playFrame() = 0;
     
 protected:
-    Adafruit_NeoPixel * strip;
+    StripProcessor * strip;
     unsigned long timeout = 0;
     unsigned long timer = 0;
-
-    void clear();
 };

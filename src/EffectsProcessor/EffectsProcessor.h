@@ -6,17 +6,18 @@
 
 #include "../Effects/Effect.h"
 #include "../Effects/Test/Test.h"
+#include "../Strip/StripProcessor.h"
 
 #include "settings.h"
 
 class EffectsProcessor {
 public:
-    EffectsProcessor(Adafruit_NeoPixel * strip);
+    EffectsProcessor(StripProcessor * strip);
     bool setEffect(String effect);
     void tick();
 
 private:
-    Adafruit_NeoPixel * strip;
+    StripProcessor * strip;
     String const effects[1] = {
         "test",
     };
@@ -24,10 +25,4 @@ private:
 
     // Effects
     std::vector<Effect *> effectsList;
-
-    void clear();
-
-    // Effects
-
-    void test();
 };

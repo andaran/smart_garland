@@ -1,6 +1,6 @@
 #include "EffectsProcessor.h"
 
-EffectsProcessor::EffectsProcessor(Adafruit_NeoPixel * strip) {
+EffectsProcessor::EffectsProcessor(StripProcessor * strip) {
     this->strip = strip;
     setEffect("test");
 
@@ -12,7 +12,7 @@ EffectsProcessor::EffectsProcessor(Adafruit_NeoPixel * strip) {
 }
 
 bool EffectsProcessor::setEffect(String effect) {
-    clear();
+    strip->clear();
     for (int i = 0; i < effects->length(); i++) {
         if (effect == effects[i]) {
             currentEffect = i;
@@ -24,11 +24,4 @@ bool EffectsProcessor::setEffect(String effect) {
 
 void EffectsProcessor::tick() {
     effectsList[currentEffect]->tick();
-}
-
-void EffectsProcessor::clear() {
-    for (int i = 0; i < NUM_LEDS; i++) {
-        strip->setPixelColor(i, strip->Color(0, 0, 0));
-    }
-    strip->show();
 }

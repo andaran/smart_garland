@@ -1,26 +1,26 @@
-#include "Strip.h"
+#include "StripProcessor.h"
 
-Strip::Strip(Adafruit_NeoPixel * strip, 
+StripProcessor::StripProcessor(Adafruit_NeoPixel * strip, 
              std::function<void(std::string&)> callback) {
     this->strip = strip;
     this->callback = callback;
 }
 
-void Strip::setPixelColor(int i, byte r, byte g, byte b) {
+void StripProcessor::setPixelColor(int i, byte r, byte g, byte b) {
     strip->setPixelColor(i, strip->Color(r, g, b));
 }
 
-void Strip::show() {
+void StripProcessor::show() {
     strip->show();
     std::string message = "show";
     callback(message);
 }
 
-void Strip::setBrightness(byte brightness) {
+void StripProcessor::setBrightness(byte brightness) {
     strip->setBrightness(brightness);
 }
 
-void Strip::clear() {
+void StripProcessor::clear() {
     for (int i = 0; i < NUM_LEDS; i++) {
         strip->setPixelColor(i, strip->Color(0, 0, 0));
     }

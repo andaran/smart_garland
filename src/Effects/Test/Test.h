@@ -4,12 +4,13 @@
 #include <Adafruit_NeoPixel.h>
 
 #include "../Effect.h"
+#include "../../Strip/StripProcessor.h"
 
 #include "settings.h"
 
 class EffectTest : public Effect {
 public:
-    EffectTest(Adafruit_NeoPixel * strip);
+    EffectTest(StripProcessor * strip);
     
 private:
     void playFrame() override;
