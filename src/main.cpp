@@ -5,10 +5,12 @@
 #include "AppexConnector/AppexConnector.h"
 #include "CmdsProcessor/CmdsProcessor.h"
 #include "EffectsProcessor/EffectsProcessor.h"
+#include "Strip/Strip.h"
 
 Adafruit_NeoPixel * strip = new Adafruit_NeoPixel(NUM_LEDS, LED_PIN, NEO_GRB + NEO_KHZ800);
 
 void appexCallback(std::unordered_map<std::string, std::string> & state);
+void stripCallback(std::string & message);
 
 std::unordered_map<std::string, std::string> initialState = {
     { "cmdToEsp", "" }, 
@@ -19,6 +21,7 @@ std::unordered_map<std::string, std::string> initialState = {
 
 AppexConnector appex(roomIDSetting, roomPassSetting, initialState, appexCallback);
 
+Strip * strip1 = new Strip(strip, stripCallback);
 EffectsProcessor effectsProcessor(strip);
 CmdsProcessor cmdsProcessor;
 
@@ -80,4 +83,9 @@ void appexCallback(std::unordered_map<std::string, std::string> & state) {
     appex.message("updateState", sendState2);
 
     Serial.println(ans);
+}
+
+void stripCallback(std::string & message) {
+    Serial.print("stripCallback: ");
+    Serial.println(message.c_str());
 }
