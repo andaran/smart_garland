@@ -20,15 +20,14 @@ std::unordered_map<std::string, std::string> initialState = {
     { "lastChange", "0" }
 };
 bool stripState = true;
-std::string stripStateStr = "";
-std::string oldStripStateStr = "";
-bool stripUpdated = true;
+bool streamState = true;  // TODO: Сделать false
 
 AppexConnector appex(roomIDSetting, roomPassSetting, initialState, appexCallback);
 
 StripProcessor * strip = new StripProcessor(ledStrip, stripCallback);
 EffectsProcessor * effectsProcessor = new EffectsProcessor(strip);
-CmdsProcessor cmdsProcessor(effectsProcessor, strip, initialState, stripState);
+CmdsProcessor cmdsProcessor(effectsProcessor, strip, initialState, 
+                            stripState, streamState);
 
 void setup() {
     // запускаем Serial порт
@@ -56,28 +55,12 @@ void setup() {
 }
 
 void loop() {
-    Serial.println("appex");
     appex.tick();
-    Serial.println("strip");
     if (stripState) effectsProcessor->tick();
-    Serial.println("strip show");
-
-    if (stripStateStr != oldStripStateStr && stripUpdated) {
-        oldStripStateStr = stripStateStr;
-        stripUpdated = false;
-
-        Serial.println("!!! strip updated");
-
-        DynamicJsonDocument doc(1024);
-        JsonObject sendState = doc.createNestedObject();
-        sendState["stripState"] = stripStateStr;
-        appex.message("updateState", sendState);
-    }
 }
 
 String cmdId = "-1";
 void appexCallback(std::unordered_map<std::string, std::string> & state) {
-    stripUpdated = true;
 
     String id = state.at("cmdId").c_str();
     if (id == cmdId) {
@@ -116,5 +99,10 @@ void appexCallback(std::unordered_map<std::string, std::string> & state) {
 
 void stripCallback(std::string message) {
     // Отправляем состояние ленты на сервер
-    stripStateStr = message;
+    if (!streamState) return;
+    
+    DynamicJsonDocument doc(1024);
+    JsonObject sendState = doc.createNestedObject();
+    sendState["stripState"] = message;
+    appex.message("updateState", sendState);
 }

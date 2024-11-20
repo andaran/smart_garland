@@ -3,8 +3,9 @@
 CmdsProcessor::CmdsProcessor(EffectsProcessor * effectsProcessor, 
                              StripProcessor * strip, 
                              std::unordered_map<std::string, std::string> & state, 
-                             bool & stripState)
-    : state(state), stripState(stripState) {
+                             bool & stripState,
+                             bool & streamState)
+    : state(state), stripState(stripState), streamState(streamState) {
     this->effectsProcessor = effectsProcessor;
     this->strip = strip;
 }
@@ -19,6 +20,7 @@ String CmdsProcessor::processCmds(String cmd) {
 
     if (cmdName == "effect") return effect(cmdArgs);
     if (cmdName == "turn") return turn(cmdArgs);
+    if (cmdName == "stream") return stream(cmdArgs);
     return "Unknown command";
 }
 
@@ -47,6 +49,23 @@ String CmdsProcessor::turn(String const & cmdArgs) {
         strip->clear();
         strip->show();
         return "Strip turned off";
+    }
+    return "Unknown command";
+}
+
+String CmdsProcessor::stream(String const & cmdArgs) {
+    if (cmdArgs == "") {
+        String message = "Stream is ";
+        message += streamState ? "on" : "off";
+        return message;
+    }
+    if (cmdArgs == "on") {
+        streamState = true;
+        return "Stream turned on";
+    }
+    if (cmdArgs == "off") {
+        streamState = false;
+        return "Stream turned off";
     }
     return "Unknown command";
 }
