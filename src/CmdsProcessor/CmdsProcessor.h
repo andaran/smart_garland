@@ -13,15 +13,15 @@ public:
     CmdsProcessor(EffectsProcessor * effectsProcessor, 
                   StripProcessor * strip, 
                   std::unordered_map<std::string, std::string> & state, 
-                  bool & stripState);
+                  bool * stripState);
     String processCmds(String cmd);
 private:
     EffectsProcessor * effectsProcessor;
     StripProcessor * strip;
     std::unordered_map<std::string, std::string> & state;
-    bool & stripState;
+    bool * stripState;
 
     // Комманды
     String effect(String const & cmdArgs);
-    //String turn(String const & cmdArgs);
+    String turn(String const & cmdArgs);
 };

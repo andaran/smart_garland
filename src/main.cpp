@@ -15,7 +15,7 @@ void stripCallback(std::string & message);
 std::unordered_map<std::string, std::string> initialState = {
     { "cmdToEsp", "" }, 
     { "ansFromEsp", "" },
-    { "cmdId", "0" },
+    { "cmdId", "-1" },
     { "stripState", "" },
     { "lastChange", "0" }
 };
@@ -25,7 +25,7 @@ AppexConnector appex(roomIDSetting, roomPassSetting, initialState, appexCallback
 
 StripProcessor * strip = new StripProcessor(ledStrip, stripCallback);
 EffectsProcessor * effectsProcessor = new EffectsProcessor(strip);
-CmdsProcessor cmdsProcessor(effectsProcessor, strip, initialState, stripState);
+CmdsProcessor cmdsProcessor(effectsProcessor, strip, initialState, &stripState);
 
 void setup() {
     // запускаем Serial порт
@@ -62,6 +62,16 @@ void appexCallback(std::unordered_map<std::string, std::string> & state) {
 
     String id = state.at("cmdId").c_str();
     if (id == cmdId) {
+        return;
+    }
+    if (cmdId == "-1") {
+        cmdId = "0";
+
+        DynamicJsonDocument doc(1024);
+        JsonObject sendState = doc.createNestedObject();
+        sendState["cmdId"] = cmdId;
+        appex.message("updateState", sendState);
+        
         return;
     }
     cmdId = id;
