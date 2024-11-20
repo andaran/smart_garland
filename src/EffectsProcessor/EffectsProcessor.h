@@ -5,10 +5,11 @@
 #include <vector>
 
 #include "../Effects/Effect.h"
-#include "../Effects/Test/Test.h"
 #include "../Strip/StripProcessor.h"
-
 #include "settings.h"
+
+#include "../Effects/Test/Test.h"
+#include "../Effects/Rainbow/Rainbow.h"
 
 class EffectsProcessor {
 public:
@@ -19,8 +20,9 @@ public:
 
 private:
     StripProcessor * strip;
-    String const effects[1] = {
+    String const effects[2] = {
         "test",
+        "rainbow"
     };
     unsigned currentEffect;
 

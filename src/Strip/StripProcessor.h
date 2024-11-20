@@ -12,6 +12,7 @@ public:
     void show();
     void setBrightness(byte brightness);
     void clear();
+    Adafruit_NeoPixel * getStrip();
 private:
     Adafruit_NeoPixel * strip;
     std::function<void(std::string)> callback;

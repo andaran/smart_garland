@@ -20,7 +20,7 @@ std::unordered_map<std::string, std::string> initialState = {
     { "lastChange", "0" }
 };
 bool stripState = true;
-bool streamState = true;  // TODO: Сделать false
+bool streamState = false;
 
 AppexConnector appex(roomIDSetting, roomPassSetting, initialState, appexCallback);
 
@@ -97,10 +97,16 @@ void appexCallback(std::unordered_map<std::string, std::string> & state) {
     Serial.println(ans);
 }
 
+unsigned long lastUpdate = 0;
 void stripCallback(std::string message) {
     // Отправляем состояние ленты на сервер
+
+    Serial.println("STRIP_STATE_START:" + String(message.c_str()) + ":STRIP_STATE_END");
+
     if (!streamState) return;
-    
+    if (millis() - lastUpdate < 200) return;
+
+    lastUpdate = millis();
     DynamicJsonDocument doc(1024);
     JsonObject sendState = doc.createNestedObject();
     sendState["stripState"] = message;

@@ -6,9 +6,11 @@ EffectsProcessor::EffectsProcessor(StripProcessor * strip) {
 
     // Создаем все эффекты
     EffectTest * effectTest = new EffectTest(strip);
+    EffectRainbow * effectRainbow = new EffectRainbow(strip);
 
     // Добавляем все эффекты в список
     effectsList.push_back(effectTest);
+    effectsList.push_back(effectRainbow);
 }
 
 bool EffectsProcessor::setEffect(String effect) {

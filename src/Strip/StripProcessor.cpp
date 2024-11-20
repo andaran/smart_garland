@@ -34,3 +34,7 @@ void StripProcessor::clear() {
     }
     strip->show();
 }
+
+Adafruit_NeoPixel * StripProcessor::getStrip() {
+    return strip;
+}
