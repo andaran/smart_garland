@@ -16,6 +16,7 @@ std::unordered_map<std::string, std::string> initialState = {
     { "cmdToEsp", "" }, 
     { "ansFromEsp", "" },
     { "cmdId", "0" },
+    { "stripState", "" },
     { "lastChange", "0" }
 };
 
@@ -86,6 +87,9 @@ void appexCallback(std::unordered_map<std::string, std::string> & state) {
 }
 
 void stripCallback(std::string & message) {
-    Serial.print("stripCallback: ");
-    Serial.println(message.c_str());
+    // Отправляем состояние ленты на сервер
+    DynamicJsonDocument doc(1024);
+    JsonObject sendState = doc.createNestedObject();
+    sendState["stripState"] = message;
+    appex.message("updateState", sendState);
 }
