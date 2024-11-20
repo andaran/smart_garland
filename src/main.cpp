@@ -19,12 +19,13 @@ std::unordered_map<std::string, std::string> initialState = {
     { "stripState", "" },
     { "lastChange", "0" }
 };
+bool stripState = true;
 
 AppexConnector appex(roomIDSetting, roomPassSetting, initialState, appexCallback);
 
 StripProcessor * strip = new StripProcessor(ledStrip, stripCallback);
-EffectsProcessor effectsProcessor(strip);
-CmdsProcessor cmdsProcessor;
+EffectsProcessor * effectsProcessor = new EffectsProcessor(strip);
+CmdsProcessor cmdsProcessor(effectsProcessor, strip, initialState, stripState);
 
 void setup() {
     // запускаем Serial порт
@@ -53,7 +54,7 @@ void setup() {
 
 void loop() {
     appex.tick();
-    effectsProcessor.tick();
+    effectsProcessor->tick();
 }
 
 String cmdId = "-1";
