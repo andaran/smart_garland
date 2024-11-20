@@ -20,4 +20,8 @@ private:
     StripProcessor * strip;
     std::unordered_map<std::string, std::string> & state;
     bool & stripState;
+
+    // Комманды
+    String effect(String const & cmdArgs);
+    //String turn(String const & cmdArgs);
 };
