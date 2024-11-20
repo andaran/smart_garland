@@ -25,7 +25,7 @@ AppexConnector appex(roomIDSetting, roomPassSetting, initialState, appexCallback
 
 StripProcessor * strip = new StripProcessor(ledStrip, stripCallback);
 EffectsProcessor * effectsProcessor = new EffectsProcessor(strip);
-CmdsProcessor cmdsProcessor(effectsProcessor, strip, initialState, &stripState);
+CmdsProcessor cmdsProcessor(effectsProcessor, strip, initialState, stripState);
 
 void setup() {
     // запускаем Serial порт
@@ -54,7 +54,7 @@ void setup() {
 
 void loop() {
     appex.tick();
-    effectsProcessor->tick();
+    if (stripState) effectsProcessor->tick();
 }
 
 String cmdId = "-1";
