@@ -22,6 +22,10 @@ bool EffectsProcessor::setEffect(String effect) {
     return false;
 }
 
+String EffectsProcessor::getEffect() {
+    return effects[currentEffect];
+}
+
 void EffectsProcessor::tick() {
     effectsList[currentEffect]->tick();
 }

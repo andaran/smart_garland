@@ -14,6 +14,7 @@ class EffectsProcessor {
 public:
     EffectsProcessor(StripProcessor * strip);
     bool setEffect(String effect);
+    String getEffect();
     void tick();
 
 private:

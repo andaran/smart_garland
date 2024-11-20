@@ -1,7 +1,7 @@
 #include "StripProcessor.h"
 
 StripProcessor::StripProcessor(Adafruit_NeoPixel * strip, 
-             std::function<void(std::string&)> callback) {
+             std::function<void(std::string)> callback) {
     this->strip = strip;
     this->callback = callback;
 }

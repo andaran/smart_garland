@@ -18,11 +18,14 @@ String CmdsProcessor::processCmds(String cmd) {
     String cmdArgs = spaceIndex == -1 ? "" : cmd.substring(spaceIndex + 1);
 
     if (cmdName == "effect") return effect(cmdArgs);
-    else if (cmdName == "turn") return turn(cmdArgs);
-    else return "Unknown command";
+    if (cmdName == "turn") return turn(cmdArgs);
+    return "Unknown command";
 }
 
 String CmdsProcessor::effect(String const & cmdArgs) {
+    if (cmdArgs == "") {
+        return "Current effect is " + effectsProcessor->getEffect();
+    }
     if (effectsProcessor->setEffect(cmdArgs)) {
         return "Effect set to " + cmdArgs;
     }
