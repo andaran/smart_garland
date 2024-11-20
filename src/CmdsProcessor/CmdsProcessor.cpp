@@ -19,7 +19,7 @@ String CmdsProcessor::processCmds(String cmd) {
     String cmdArgs = spaceIndex == -1 ? "" : cmd.substring(spaceIndex + 1);
 
     if (cmdName == "effect") return effect(cmdArgs);
-    if (cmdName == "turn") return turn(cmdArgs);
+    if (cmdName == "power") return power(cmdArgs);
     if (cmdName == "stream") return stream(cmdArgs);
     return "Unknown command";
 }
@@ -34,7 +34,7 @@ String CmdsProcessor::effect(String const & cmdArgs) {
     return "Effect not found";
 }
 
-String CmdsProcessor::turn(String const & cmdArgs) {
+String CmdsProcessor::power(String const & cmdArgs) {
     if (cmdArgs == "") {
         String message = "Strip is ";
         message += stripState ? "on" : "off";

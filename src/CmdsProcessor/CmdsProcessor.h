@@ -25,6 +25,6 @@ private:
 
     // Комманды
     String effect(String const & cmdArgs);
-    String turn(String const & cmdArgs);
+    String power(String const & cmdArgs);
     String stream(String const & cmdArgs);
 };
