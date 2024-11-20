@@ -78,10 +78,8 @@ void appexCallback(std::unordered_map<std::string, std::string> & state) {
     appex.message("updateState", sendState);
 
     // Сбрасываем команду
-    DynamicJsonDocument doc2(1024);
-    JsonObject sendState2 = doc2.createNestedObject();
-    sendState2["ansFromEsp"] = "[" + cmdId + "]";
-    appex.message("updateState", sendState2);
+    sendState["ansFromEsp"] = "[" + cmdId + "]";
+    appex.message("updateState", sendState);
 
     Serial.println(ans);
 }
