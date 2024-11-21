@@ -3,11 +3,12 @@
 #include "settings.h"
 #include <Adafruit_NeoPixel.h>
 #include <string>
+#include <Base64.h>
 
 class StripProcessor {
 public:
     StripProcessor(Adafruit_NeoPixel * strip, 
-          std::function<void(std::string)> callback);
+          std::function<void(char*)> callback);
     void setPixelColor(int i, byte r, byte g, byte b);
     void show();
     void setBrightness(byte brightness);
@@ -15,5 +16,6 @@ public:
     Adafruit_NeoPixel * getStrip();
 private:
     Adafruit_NeoPixel * strip;
-    std::function<void(std::string)> callback;
+    std::function<void(char*)> callback;
+    char* compressLEDs();
 };

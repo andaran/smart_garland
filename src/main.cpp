@@ -10,7 +10,7 @@
 Adafruit_NeoPixel * ledStrip = new Adafruit_NeoPixel(NUM_LEDS, LED_PIN, NEO_GRB + NEO_KHZ800);
 
 void appexCallback(std::unordered_map<std::string, std::string> & state);
-void stripCallback(std::string message);
+void stripCallback(char* message);
 
 std::unordered_map<std::string, std::string> initialState = {
     { "cmdToEsp", "" }, 
@@ -20,7 +20,7 @@ std::unordered_map<std::string, std::string> initialState = {
     { "lastChange", "0" }
 };
 bool stripState = true;
-bool streamState = false;
+bool streamState = true;
 
 AppexConnector appex(roomIDSetting, roomPassSetting, initialState, appexCallback);
 
@@ -60,7 +60,9 @@ void loop() {
 }
 
 String cmdId = "-1";
+bool updated = true;
 void appexCallback(std::unordered_map<std::string, std::string> & state) {
+    updated = true;
 
     String id = state.at("cmdId").c_str();
     if (id == cmdId) {
@@ -69,8 +71,8 @@ void appexCallback(std::unordered_map<std::string, std::string> & state) {
     if (cmdId == "-1") {
         cmdId = "0";
 
-        DynamicJsonDocument doc(1024);
-        JsonObject sendState = doc.createNestedObject();
+        JsonDocument doc;
+        JsonObject sendState = doc.add<JsonObject>();
         sendState["cmdId"] = cmdId;
         appex.message("updateState", sendState);
         
@@ -85,8 +87,8 @@ void appexCallback(std::unordered_map<std::string, std::string> & state) {
     Serial.println(cmd);
 
     // Отвечаем на команду
-    DynamicJsonDocument doc(1024);
-    JsonObject sendState = doc.createNestedObject();
+    JsonDocument doc;
+    JsonObject sendState = doc.add<JsonObject>();
     sendState["ansFromEsp"] = ans;
     appex.message("updateState", sendState);
 
@@ -98,17 +100,21 @@ void appexCallback(std::unordered_map<std::string, std::string> & state) {
 }
 
 unsigned long lastUpdate = 0;
-void stripCallback(std::string message) {
+void stripCallback(char* message) {
     // Отправляем состояние ленты на сервер
 
-    Serial.println("STRIP_STATE_START:" + String(message.c_str()) + ":STRIP_STATE_END");
+    //Serial.println("STRIP_STATE_START:" + String(message.c_str()) + ":STRIP_STATE_END");
 
-    if (!streamState) return;
-    if (millis() - lastUpdate < 200) return;
+    if (millis() - lastUpdate >= 500 && streamState) {
 
-    lastUpdate = millis();
-    DynamicJsonDocument doc(1024);
-    JsonObject sendState = doc.createNestedObject();
-    sendState["stripState"] = message;
-    appex.message("updateState", sendState);
+        updated = false;
+        lastUpdate = millis();
+
+        JsonDocument doc;
+        JsonObject sendState = doc.add<JsonObject>();
+        sendState["stripState"] = message;
+        appex.message("updateState", sendState);
+    }
+
+    delete message;
 }
