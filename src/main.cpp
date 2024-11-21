@@ -13,6 +13,7 @@ void appexCallback();
 void stripCallback(char* message);
 
 byte streamState = 0;
+unsigned long switchTimer = 0;
 
 JsonDocument jsonDoc;
 JsonObject state = jsonDoc.add<JsonObject>();
@@ -22,7 +23,7 @@ Adafruit_NeoPixel ledStrip(NUM_LEDS, LED_PIN, NEO_GRB + NEO_KHZ800);
 AppexConnector appex(roomIDSetting, roomPassSetting, state, appexCallback);
 StripProcessor strip(ledStrip, stripCallback);
 EffectsProcessor effectsProcessor(strip);
-CmdsProcessor cmdsProcessor(effectsProcessor, strip, state, streamState);
+CmdsProcessor cmdsProcessor(effectsProcessor, strip, state, streamState, switchTimer);
 
 void setup() {
     // Начальное состояние
@@ -68,6 +69,12 @@ void loop() {
 
     // Обработка кнопки
     if (btn.click()) strip.switchStripState();
+
+    // Обработка таймера
+    if (switchTimer && millis() >= switchTimer) {
+        switchTimer = 0;
+        strip.setStripState(false);
+    }
 }
 
 int cmdId = -1;

@@ -13,17 +13,20 @@ public:
     CmdsProcessor(EffectsProcessor & effectsProcessor, 
                   StripProcessor & strip, 
                   JsonObject & state, 
-                  byte & streamState);
+                  byte & streamState,
+                  unsigned long & swithTimer);
     String processCmds(String cmd);
 private:
     EffectsProcessor & effectsProcessor;
     StripProcessor & strip;
     JsonObject & state;
     byte & streamState;
+    unsigned long & swithTimer;
 
     // Комманды
     String effect(String const & cmdArgs);
     String power(String const & cmdArgs);
     String stream(String const & cmdArgs);
     String brightness(String const & cmdArgs);
+    String timer(String const & cmdArgs);
 };
