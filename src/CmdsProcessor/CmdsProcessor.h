@@ -13,14 +13,12 @@ public:
     CmdsProcessor(EffectsProcessor * effectsProcessor, 
                   StripProcessor * strip, 
                   JsonObject & state, 
-                  bool & stripState,
                   byte & streamState);
     String processCmds(String cmd);
 private:
     EffectsProcessor * effectsProcessor;
     StripProcessor * strip;
     JsonObject & state;
-    bool & stripState;
     byte & streamState;
 
     // Комманды

@@ -29,5 +29,6 @@ String EffectsProcessor::getEffect() {
 }
 
 void EffectsProcessor::tick() {
+    if (!strip->getStripState()) return;
     effectsList[currentEffect]->tick();
 }

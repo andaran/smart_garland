@@ -3,9 +3,8 @@
 CmdsProcessor::CmdsProcessor(EffectsProcessor * effectsProcessor, 
                              StripProcessor * strip, 
                              JsonObject & state, 
-                             bool & stripState,
                              byte & streamState)
-    : state(state), stripState(stripState), streamState(streamState) {
+    : state(state), streamState(streamState) {
     this->effectsProcessor = effectsProcessor;
     this->strip = strip;
 }
@@ -38,17 +37,15 @@ String CmdsProcessor::effect(String const & cmdArgs) {
 String CmdsProcessor::power(String const & cmdArgs) {
     if (cmdArgs == "") {
         String message = "Strip is ";
-        message += stripState ? "on" : "off";
+        message += strip->getStripState() ? "on" : "off";
         return message;
     }
     if (cmdArgs == "on") {
-        stripState = true;
+        strip->setStripState(true);
         return "Strip turned on";
     }
     if (cmdArgs == "off") {
-        stripState = false;
-        strip->clear();
-        strip->show();
+        strip->setStripState(false);
         return "Strip turned off";
     }
     return "Unknown command";

@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <Adafruit_NeoPixel.h>
 #include <EEPROM.h>
+#include <EncButton.h>
 
 #include "settings.h"
 #include "AppexConnector/AppexConnector.h"
@@ -16,15 +17,15 @@ void stripCallback(char* message);
 JsonDocument jsonDoc;
 JsonObject state = jsonDoc.add<JsonObject>();
 
-bool stripState = true;
+Button btn(BUTTON_PIN);
+
 byte streamState = 0;
 
 AppexConnector appex(roomIDSetting, roomPassSetting, state, appexCallback);
 
 StripProcessor * strip = new StripProcessor(ledStrip, stripCallback);
 EffectsProcessor * effectsProcessor = new EffectsProcessor(strip);
-CmdsProcessor cmdsProcessor(effectsProcessor, strip, state, 
-                            stripState, streamState);
+CmdsProcessor cmdsProcessor(effectsProcessor, strip, state, streamState);
 
 void setup() {
     // Начальное состояние
@@ -44,6 +45,9 @@ void setup() {
     // настраиваем ленту
     strip->begin();
 
+    // настраиваем кнопку
+    pinMode(BUTTON_PIN, INPUT_PULLUP);
+
     // подключаемся к WiFi
     WiFi.begin(ussid, pass);
     while (WiFi.status() != WL_CONNECTED) {
@@ -62,7 +66,11 @@ void setup() {
 
 void loop() {
     appex.tick();
-    if (stripState) effectsProcessor->tick();
+    effectsProcessor->tick();
+    btn.tick();
+
+    // Обработка кнопки
+    if (btn.click()) strip->switchStripState();
 }
 
 int cmdId = -1;

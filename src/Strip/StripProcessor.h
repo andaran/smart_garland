@@ -17,8 +17,12 @@ public:
     void clear();
     Adafruit_NeoPixel * getStrip();
     void begin();
+    void setStripState(bool state);
+    void switchStripState();
+    bool getStripState();
 private:
     Adafruit_NeoPixel * strip;
+    bool stripState = true;
     std::function<void(char*)> callback;
     char* compressLEDs();
 };

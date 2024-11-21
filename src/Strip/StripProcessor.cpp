@@ -43,7 +43,7 @@ void StripProcessor::show() {
 void StripProcessor::setBrightness(byte brightness) {
     EEPROM.write(BRIGHTNESS_INDEX, brightness);
     EEPROM.commit();
-    
+
     strip->setBrightness(brightness);
     strip->show();
 }
@@ -61,4 +61,22 @@ void StripProcessor::clear() {
 
 Adafruit_NeoPixel * StripProcessor::getStrip() {
     return strip;
+}
+
+void StripProcessor::setStripState(bool state) {
+    stripState = state;
+    if (stripState) {
+        strip->show();
+    } else {
+        clear();
+    }
+}
+
+void StripProcessor::switchStripState() {
+    stripState = !stripState;
+    setStripState(stripState);
+}
+
+bool StripProcessor::getStripState() {
+    return stripState;
 }
