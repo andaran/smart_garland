@@ -12,14 +12,14 @@ class CmdsProcessor {
 public:
     CmdsProcessor(EffectsProcessor * effectsProcessor, 
                   StripProcessor * strip, 
-                  std::unordered_map<std::string, std::string> & state, 
+                  JsonObject & state, 
                   bool & stripState,
                   bool & streamState);
     String processCmds(String cmd);
 private:
     EffectsProcessor * effectsProcessor;
     StripProcessor * strip;
-    std::unordered_map<std::string, std::string> & state;
+    JsonObject & state;
     bool & stripState;
     bool & streamState;
 

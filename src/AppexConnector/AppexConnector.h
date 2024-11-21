@@ -11,8 +11,8 @@ class AppexConnector {
 private:
     String roomID;
     String roomPass;
-    std::unordered_map<std::string, std::string> & state;
-    std::function<void(std::unordered_map<std::string, std::string>&)> callback;
+    JsonObject & state;
+    std::function<void()> callback;
 
     SocketIOclient socketIO;
 
@@ -22,11 +22,12 @@ private:
 public:
     AppexConnector(String roomID, 
                    String roomPass,
-                   std::unordered_map<std::string, std::string> & state,
-                   std::function<void(std::unordered_map<std::string, std::string>&)> callback);
+                   JsonObject & state,
+                   std::function<void()> callback);
 
     void connectToRoom();
-    void message(const char* eventType, const JsonObject& sendState);
+    void message(const char* eventType, const std::vector<String>& params);
+    void update(const std::vector<String>& params);
     void setup();
     void tick();
 };

@@ -2,9 +2,8 @@
 
 AppexConnector::AppexConnector(String roomID, 
                                String roomPass,
-                               std::unordered_map<std::string, std::string> & state,
-                               std::function<void(
-                                std::unordered_map<std::string, std::string>&)> callback) 
+                               JsonObject& state,
+                               std::function<void()> callback) 
     : roomID(roomID), roomPass(roomPass), state(state), callback(callback) {}
 
 void AppexConnector::setup() {
@@ -17,35 +16,35 @@ void AppexConnector::setup() {
 
 void AppexConnector::socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length) {
     switch (type) {
-    case sIOtype_DISCONNECT: {
-        Serial.println("[IOc] Ошибка подключения!\n");
-        
-    } break;
+        case sIOtype_DISCONNECT: {
+            Serial.println("[IOc] Ошибка подключения!\n");
+            
+        } break;
 
-    case sIOtype_CONNECT: {
-        Serial.println("[IOc] Подключено!");
+        case sIOtype_CONNECT: {
+            Serial.println("[IOc] Подключено!");
 
-        // join default namespace (no auto join in Socket.IO V3)
-        socketIO.send(sIOtype_CONNECT, "/");
+            // join default namespace (no auto join in Socket.IO V3)
+            socketIO.send(sIOtype_CONNECT, "/");
 
-        message("connectToRoom", JsonObject());
+            message("connectToRoom", {});
 
-    } break;
+        } break;
 
-    case sIOtype_EVENT: {
-        char* json = (char*) payload;
+        case sIOtype_EVENT: {
+            char* json = (char*) payload;
 
-        // парсим событие с новым состоянием
-        parseEvent(json);
+            // парсим событие с новым состоянием
+            parseEvent(json);
 
-    } break;
+        } break;
 
-    default: {
-        Serial.println("[IOc] Пришло что-то непонятное :(");
-        hexdump(payload, length);
+        default: {
+            Serial.println("[IOc] Пришло что-то непонятное :(");
+            hexdump(payload, length);
 
-    } break;
-}
+        } break;
+    }
 }
 
 void AppexConnector::parseEvent(char* json) {
@@ -92,10 +91,9 @@ void AppexConnector::parseEvent(char* json) {
 
     for (JsonPair kv : paramValues) {
         std::string prmName = kv.key().c_str();
-        std::string prmValue = kv.value().as<std::string>();
 
-        if (state.count(prmName) != 0) {
-            state.at(prmName) = prmValue;
+        if (state.containsKey(prmName)) {
+            state[prmName] = kv.value();
         } else {
             Serial.print("[ERR] Неизвестный параметр: ");
             Serial.println(prmName.c_str());
@@ -103,11 +101,11 @@ void AppexConnector::parseEvent(char* json) {
     }
 
     // Вызываем callback
-    callback(state);
+    callback();
 }
 
 void AppexConnector::message(const char* eventType, 
-                             const JsonObject & sendState) {
+                             const std::vector<String> & updateParams) {
 
     // данные отсылаются в json
     JsonDocument doc;
@@ -122,8 +120,11 @@ void AppexConnector::message(const char* eventType,
     params["roomId"] = roomID;
     params["roomPass"] = roomPass;
 
-    if (!sendState.isNull()) {
-        params["params"] = sendState;
+    if (!updateParams.empty()) {
+        JsonObject update = params.createNestedObject("params");
+        for (String param : updateParams) {
+            update[param] = state[param];
+        }
     }
 
     // преобразуем json в строку
@@ -135,6 +136,10 @@ void AppexConnector::message(const char* eventType,
 
     // шлем событие на сервер appex
     socketIO.sendEVENT(output);
+}
+
+void AppexConnector::update(const std::vector<String> & updateParams) {
+    message("updateState", updateParams);
 }
 
 void AppexConnector::tick() {

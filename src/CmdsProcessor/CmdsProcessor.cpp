@@ -2,7 +2,7 @@
 
 CmdsProcessor::CmdsProcessor(EffectsProcessor * effectsProcessor, 
                              StripProcessor * strip, 
-                             std::unordered_map<std::string, std::string> & state, 
+                             JsonObject & state, 
                              bool & stripState,
                              bool & streamState)
     : state(state), stripState(stripState), streamState(streamState) {
