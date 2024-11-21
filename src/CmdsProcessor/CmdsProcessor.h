@@ -27,4 +27,5 @@ private:
     String effect(String const & cmdArgs);
     String power(String const & cmdArgs);
     String stream(String const & cmdArgs);
+    String brightness(String const & cmdArgs);
 };

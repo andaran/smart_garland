@@ -6,6 +6,13 @@ StripProcessor::StripProcessor(Adafruit_NeoPixel * strip,
     this->callback = callback;
 }
 
+void StripProcessor::begin() {
+    strip->begin();
+    Serial.println("Strip begin");
+    Serial.println(EEPROM.read(BRIGHTNESS_INDEX));
+    strip->setBrightness(EEPROM.read(BRIGHTNESS_INDEX));
+}
+
 void StripProcessor::setPixelColor(int i, byte r, byte g, byte b) {
     strip->setPixelColor(i, strip->Color(r, g, b));
 }
@@ -34,7 +41,15 @@ void StripProcessor::show() {
 }
 
 void StripProcessor::setBrightness(byte brightness) {
+    EEPROM.write(BRIGHTNESS_INDEX, brightness);
+    EEPROM.commit();
+    
     strip->setBrightness(brightness);
+    strip->show();
+}
+
+byte StripProcessor::getBrightness() {
+    return strip->getBrightness();
 }
 
 void StripProcessor::clear() {

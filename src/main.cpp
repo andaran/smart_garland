@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <Adafruit_NeoPixel.h>
+#include <EEPROM.h>
 
 #include "settings.h"
 #include "AppexConnector/AppexConnector.h"
@@ -33,13 +34,15 @@ void setup() {
     state["stripState"] = "";
     state["lastChange"] = 0;
 
+    // Инициализируем EEPROM
+    EEPROM.begin(512);
+
     // запускаем Serial порт
     Serial.begin(115200);
     Serial.setDebugOutput(false);
 
     // настраиваем ленту
-    ledStrip->begin();
-    ledStrip->show();
+    strip->begin();
 
     // подключаемся к WiFi
     WiFi.begin(ussid, pass);

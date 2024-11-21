@@ -21,6 +21,7 @@ String CmdsProcessor::processCmds(String cmd) {
     if (cmdName == "effect") return effect(cmdArgs);
     if (cmdName == "power") return power(cmdArgs);
     if (cmdName == "stream") return stream(cmdArgs);
+    if (cmdName == "brightness") return brightness(cmdArgs);
     return "Unknown command";
 }
 
@@ -82,4 +83,16 @@ String CmdsProcessor::stream(String const & cmdArgs) {
         return "Stream turned off";
     }
     return "Unknown command";
+}
+
+String CmdsProcessor::brightness(String const & cmdArgs) {
+    if (cmdArgs == "") {
+        return "Brightness is " + String(strip->getBrightness());
+    }
+    byte brightness = cmdArgs.toInt();
+    if (brightness < 0 || brightness > 255) {
+        return "Brightness must be in range [0, 255]";
+    }
+    strip->setBrightness(brightness);
+    return "Brightness set to " + String(brightness);
 }
