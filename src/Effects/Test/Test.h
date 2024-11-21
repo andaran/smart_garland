@@ -10,7 +10,7 @@
 
 class EffectTest : public Effect {
 public:
-    EffectTest(StripProcessor * strip);
+    EffectTest(StripProcessor & strip);
     
 private:
     void playFrame() override;

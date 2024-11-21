@@ -10,14 +10,14 @@
 
 class CmdsProcessor {
 public:
-    CmdsProcessor(EffectsProcessor * effectsProcessor, 
-                  StripProcessor * strip, 
+    CmdsProcessor(EffectsProcessor & effectsProcessor, 
+                  StripProcessor & strip, 
                   JsonObject & state, 
                   byte & streamState);
     String processCmds(String cmd);
 private:
-    EffectsProcessor * effectsProcessor;
-    StripProcessor * strip;
+    EffectsProcessor & effectsProcessor;
+    StripProcessor & strip;
     JsonObject & state;
     byte & streamState;
 

@@ -1,16 +1,16 @@
 #include "Rainbow.h"
 
-EffectRainbow::EffectRainbow(StripProcessor * strip) : Effect(strip, 50) {
+EffectRainbow::EffectRainbow(StripProcessor & strip) : Effect(strip, 50) {
     this->step = 0;
 }
 
 void EffectRainbow::playFrame() {
     for (int i = 0; i < NUM_LEDS; i++) {
         Rgb color = wheel((i + step) & 255);
-        strip->setPixelColor(i, color.r, color.g, color.b);
+        strip.setPixelColor(i, color.r, color.g, color.b);
     }
     step = (step + 5) % 256;
-    strip->show();
+    strip.show();
 }
 
 Rgb EffectRainbow::wheel(byte wheelPos) {

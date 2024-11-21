@@ -1,20 +1,17 @@
 #include "StripProcessor.h"
 
-StripProcessor::StripProcessor(Adafruit_NeoPixel * strip, 
-             std::function<void(char*)> callback) {
-    this->strip = strip;
+StripProcessor::StripProcessor(Adafruit_NeoPixel & strip, 
+             std::function<void(char*)> callback) : strip(strip) {
     this->callback = callback;
 }
 
 void StripProcessor::begin() {
-    strip->begin();
-    Serial.println("Strip begin");
-    Serial.println(EEPROM.read(BRIGHTNESS_INDEX));
-    strip->setBrightness(EEPROM.read(BRIGHTNESS_INDEX));
+    strip.begin();
+    strip.setBrightness(EEPROM.read(BRIGHTNESS_INDEX));
 }
 
 void StripProcessor::setPixelColor(int i, byte r, byte g, byte b) {
-    strip->setPixelColor(i, strip->Color(r, g, b));
+    strip.setPixelColor(i, strip.Color(r, g, b));
 }
 
 char* StripProcessor::compressLEDs() {
@@ -24,7 +21,7 @@ char* StripProcessor::compressLEDs() {
 
     // Заполняем массив цветами пикселей
     for (int i = 0; i < NUM_LEDS; i++) {
-        uint32_t color = strip->getPixelColor(i);
+        uint32_t color = strip.getPixelColor(i);
         data[i * 3] = (color >> 16) & 0xFF;     // R
         data[i * 3 + 1] = (color >> 8) & 0xFF;  // G
         data[i * 3 + 2] = color & 0xFF;         // B
@@ -36,7 +33,7 @@ char* StripProcessor::compressLEDs() {
 }
 
 void StripProcessor::show() {
-    strip->show();
+    strip.show();
     callback(compressLEDs());
 }
 
@@ -44,29 +41,29 @@ void StripProcessor::setBrightness(byte brightness) {
     EEPROM.write(BRIGHTNESS_INDEX, brightness);
     EEPROM.commit();
 
-    strip->setBrightness(brightness);
-    strip->show();
+    strip.setBrightness(brightness);
+    strip.show();
 }
 
 byte StripProcessor::getBrightness() {
-    return strip->getBrightness();
+    return strip.getBrightness();
 }
 
 void StripProcessor::clear() {
     for (int i = 0; i < NUM_LEDS; i++) {
-        strip->setPixelColor(i, strip->Color(0, 0, 0));
+        strip.setPixelColor(i, strip.Color(0, 0, 0));
     }
-    strip->show();
+    strip.show();
 }
 
-Adafruit_NeoPixel * StripProcessor::getStrip() {
+Adafruit_NeoPixel & StripProcessor::getStrip() {
     return strip;
 }
 
 void StripProcessor::setStripState(bool state) {
     stripState = state;
     if (stripState) {
-        strip->show();
+        strip.show();
     } else {
         clear();
     }

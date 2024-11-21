@@ -9,22 +9,19 @@
 #include "EffectsProcessor/EffectsProcessor.h"
 #include "Strip/StripProcessor.h"
 
-Adafruit_NeoPixel * ledStrip = new Adafruit_NeoPixel(NUM_LEDS, LED_PIN, NEO_GRB + NEO_KHZ800);
-
 void appexCallback();
 void stripCallback(char* message);
+
+byte streamState = 0;
 
 JsonDocument jsonDoc;
 JsonObject state = jsonDoc.add<JsonObject>();
 
 Button btn(BUTTON_PIN);
-
-byte streamState = 0;
-
+Adafruit_NeoPixel ledStrip(NUM_LEDS, LED_PIN, NEO_GRB + NEO_KHZ800);
 AppexConnector appex(roomIDSetting, roomPassSetting, state, appexCallback);
-
-StripProcessor * strip = new StripProcessor(ledStrip, stripCallback);
-EffectsProcessor * effectsProcessor = new EffectsProcessor(strip);
+StripProcessor strip(ledStrip, stripCallback);
+EffectsProcessor effectsProcessor(strip);
 CmdsProcessor cmdsProcessor(effectsProcessor, strip, state, streamState);
 
 void setup() {
@@ -43,7 +40,7 @@ void setup() {
     Serial.setDebugOutput(false);
 
     // настраиваем ленту
-    strip->begin();
+    strip.begin();
 
     // настраиваем кнопку
     pinMode(BUTTON_PIN, INPUT_PULLUP);
@@ -66,11 +63,11 @@ void setup() {
 
 void loop() {
     appex.tick();
-    effectsProcessor->tick();
+    effectsProcessor.tick();
     btn.tick();
 
     // Обработка кнопки
-    if (btn.click()) strip->switchStripState();
+    if (btn.click()) strip.switchStripState();
 }
 
 int cmdId = -1;

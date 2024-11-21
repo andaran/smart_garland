@@ -13,13 +13,13 @@
 
 class EffectsProcessor {
 public:
-    EffectsProcessor(StripProcessor * strip);
+    EffectsProcessor(StripProcessor & strip);
     bool setEffect(String effect);
     String getEffect();
     void tick();
 
 private:
-    StripProcessor * strip;
+    StripProcessor & strip;
     unsigned currentEffect;
 
     // Effects

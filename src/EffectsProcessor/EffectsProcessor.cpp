@@ -1,7 +1,6 @@
 #include "EffectsProcessor.h"
 
-EffectsProcessor::EffectsProcessor(StripProcessor * strip) {
-    this->strip = strip;
+EffectsProcessor::EffectsProcessor(StripProcessor & strip) : strip(strip) {
 
     // Добавляем эффекты
     effects = {
@@ -13,7 +12,7 @@ EffectsProcessor::EffectsProcessor(StripProcessor * strip) {
 }
 
 bool EffectsProcessor::setEffect(String effect) {
-    strip->clear();
+    strip.clear();
     for (int i = 0; i < effects.size(); i++) {
         if (effect == effects[i].first) {
             currentEffect = i;
@@ -28,6 +27,6 @@ String EffectsProcessor::getEffect() {
 }
 
 void EffectsProcessor::tick() {
-    if (!strip->getStripState()) return;
+    if (!strip.getStripState()) return;
     effects[currentEffect].second->tick();
 }

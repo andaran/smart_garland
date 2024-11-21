@@ -16,7 +16,7 @@ struct Rgb {
 
 class EffectRainbow : public Effect {
 public:
-    EffectRainbow(StripProcessor * strip);
+    EffectRainbow(StripProcessor & strip);
     
 private:
     void playFrame() override;

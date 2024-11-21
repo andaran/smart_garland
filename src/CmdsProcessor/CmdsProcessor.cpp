@@ -1,12 +1,10 @@
 #include "CmdsProcessor.h"
 
-CmdsProcessor::CmdsProcessor(EffectsProcessor * effectsProcessor, 
-                             StripProcessor * strip, 
+CmdsProcessor::CmdsProcessor(EffectsProcessor & effectsProcessor, 
+                             StripProcessor & strip, 
                              JsonObject & state, 
                              byte & streamState)
-    : state(state), streamState(streamState) {
-    this->effectsProcessor = effectsProcessor;
-    this->strip = strip;
+    : effectsProcessor(effectsProcessor), strip(strip), state(state), streamState(streamState) {
 }
 
 String CmdsProcessor::processCmds(String cmd) {
@@ -26,9 +24,9 @@ String CmdsProcessor::processCmds(String cmd) {
 
 String CmdsProcessor::effect(String const & cmdArgs) {
     if (cmdArgs == "") {
-        return "Current effect is " + effectsProcessor->getEffect();
+        return "Current effect is " + effectsProcessor.getEffect();
     }
-    if (effectsProcessor->setEffect(cmdArgs)) {
+    if (effectsProcessor.setEffect(cmdArgs)) {
         return "Effect set to " + cmdArgs;
     }
     return "Effect not found";
@@ -37,15 +35,15 @@ String CmdsProcessor::effect(String const & cmdArgs) {
 String CmdsProcessor::power(String const & cmdArgs) {
     if (cmdArgs == "") {
         String message = "Strip is ";
-        message += strip->getStripState() ? "on" : "off";
+        message += strip.getStripState() ? "on" : "off";
         return message;
     }
     if (cmdArgs == "on") {
-        strip->setStripState(true);
+        strip.setStripState(true);
         return "Strip turned on";
     }
     if (cmdArgs == "off") {
-        strip->setStripState(false);
+        strip.setStripState(false);
         return "Strip turned off";
     }
     return "Unknown command";
@@ -84,12 +82,12 @@ String CmdsProcessor::stream(String const & cmdArgs) {
 
 String CmdsProcessor::brightness(String const & cmdArgs) {
     if (cmdArgs == "") {
-        return "Brightness is " + String(strip->getBrightness());
+        return "Brightness is " + String(strip.getBrightness());
     }
     byte brightness = cmdArgs.toInt();
     if (brightness < 0 || brightness > 255) {
         return "Brightness must be in range [0, 255]";
     }
-    strip->setBrightness(brightness);
+    strip.setBrightness(brightness);
     return "Brightness set to " + String(brightness);
 }

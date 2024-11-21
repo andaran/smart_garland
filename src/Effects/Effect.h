@@ -8,13 +8,13 @@
  
 class Effect {
 public:
-    Effect(StripProcessor * strip, unsigned long timeout);
+    Effect(StripProcessor & strip, unsigned long timeout);
 
     void tick();
     virtual void playFrame() = 0;
     
 protected:
-    StripProcessor * strip;
+    StripProcessor & strip;
     unsigned long timeout = 0;
     unsigned long timer = 0;
 };
