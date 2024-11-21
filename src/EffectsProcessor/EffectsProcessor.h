@@ -20,12 +20,8 @@ public:
 
 private:
     StripProcessor * strip;
-    String const effects[2] = {
-        "test",
-        "rainbow"
-    };
     unsigned currentEffect;
 
     // Effects
-    std::vector<Effect *> effectsList;
+    std::vector<std::pair<String, Effect*>> effects;
 };

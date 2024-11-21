@@ -2,21 +2,20 @@
 
 EffectsProcessor::EffectsProcessor(StripProcessor * strip) {
     this->strip = strip;
+
+    // Добавляем эффекты
+    effects = {
+        {"test", new EffectTest(strip)},
+        {"rainbow", new EffectRainbow(strip)}
+    };
+
     setEffect("test");
-
-    // Создаем все эффекты
-    EffectTest * effectTest = new EffectTest(strip);
-    EffectRainbow * effectRainbow = new EffectRainbow(strip);
-
-    // Добавляем все эффекты в список
-    effectsList.push_back(effectTest);
-    effectsList.push_back(effectRainbow);
 }
 
 bool EffectsProcessor::setEffect(String effect) {
     strip->clear();
-    for (int i = 0; i < effects->length(); i++) {
-        if (effect == effects[i]) {
+    for (int i = 0; i < effects.size(); i++) {
+        if (effect == effects[i].first) {
             currentEffect = i;
             return true;
         }
@@ -25,10 +24,10 @@ bool EffectsProcessor::setEffect(String effect) {
 }
 
 String EffectsProcessor::getEffect() {
-    return effects[currentEffect];
+    return effects[currentEffect].first;
 }
 
 void EffectsProcessor::tick() {
     if (!strip->getStripState()) return;
-    effectsList[currentEffect]->tick();
+    effects[currentEffect].second->tick();
 }
