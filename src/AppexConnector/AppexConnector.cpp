@@ -28,17 +28,7 @@ void AppexConnector::socketIOEvent(socketIOmessageType_t type, uint8_t * payload
         // join default namespace (no auto join in Socket.IO V3)
         socketIO.send(sIOtype_CONNECT, "/");
 
-        /*
-
-        Теперь подключаемся к комнате. 
-        Это работает как группа в каком-нибудь мессенджере - 
-        как только один участник напишет сообщение 
-        (передаст обновление для объекта состояния),
-        это сообщение сразу же получат все другие участники 
-        (телефоны, платы esp, можно и малину подключить). 
-        
-        */
-        connectToRoom();
+        message("connectToRoom", JsonObject());
 
     } break;
 
@@ -59,134 +49,68 @@ void AppexConnector::socketIOEvent(socketIOmessageType_t type, uint8_t * payload
 }
 
 void AppexConnector::parseEvent(char* json) {
+    // Динамическая структура для JSON
+    JsonDocument doc;
 
-    /* parse json */
-    String messageType = "";
-    String parsedParams = "";
-    char oldSimbool;
-    bool parseTypeFlag = false;
-    bool parseParamsFlag = false;
-
-    for (unsigned long i = 0; i < strlen(json); i++) {
-        if (json[i] == '{') {
-            parseParamsFlag = true;
-            parsedParams = "";
-        }
-
-        if (json[i] == '"') {
-        if (parseTypeFlag) {
-            parseTypeFlag = false;
-        } else if (messageType.length() == 0) {
-            parseTypeFlag = true;
-        }
-
-        if (parseTypeFlag) {
-            continue;
-        }
-        }
-
-        if (parseTypeFlag) {
-            messageType += json[i];
-        }
-        if (parseParamsFlag) {
-            parsedParams += json[i];
-        }
-
-        if (json[i] == '}') {
-            parseParamsFlag = false;
-        }
-            oldSimbool = json[i];
-    }
-
-    StaticJsonDocument<200> doc;
-    DeserializationError error = deserializeJson(doc, parsedParams);
+    // Парсинг JSON
+    DeserializationError error = deserializeJson(doc, json);
 
     if (error) {
-        Serial.print("[ERR] Ошибка парсинга json!");
-    } else {
-        
-        /* count quantity of params and delete unnecessary symbols */
-        String prms = "";
-        int prmsQuant = 1;
-        for (unsigned long i = 1; i < parsedParams.length() - 1; i++) {
-        if (parsedParams[i] == '"') { continue; }
-        if (parsedParams[i] == ',') { prmsQuant++; }
-            prms += parsedParams[i];
-        }
-
-        /* put params to array cells */
-        String namesAndValues[prmsQuant];
-        int numberOfParam = 0;
-        for (unsigned long i = 0; i < prms.length(); i++) {
-            if (prms[i] == ',') {
-                numberOfParam++;
-                continue;
-            }
-            namesAndValues[numberOfParam] += prms[i];
-        }
-
-        /* split params and values */
-        std::string prmName;
-        std::string prmValue;
-        char* values[prmsQuant];
-        bool typeFlag = false;
-        for (int i = 0; i < prmsQuant; i++) {
-            typeFlag = false;
-            prmName = "";
-            prmValue = "";
-            for (int j = 0; j < namesAndValues[i].length(); j++) {
-                if (namesAndValues[i][j] == ':') {
-                    typeFlag = true;
-                    continue;
-                }
-
-                if (typeFlag) {
-                    prmValue += namesAndValues[i][j];
-                } else {
-                    prmName += namesAndValues[i][j];
-                }
-            }
-
-            /* save changes */
-            if (state.count(prmName) != 0) {
-                state.at(prmName) = prmValue;
-            } else {
-                Serial.print("[ERR] Неизвестный параметр \"");
-                Serial.print(prmName.c_str());
-                Serial.println("\"!");
-            }
-        }
-
-        /* call update function */
-        callback(state);
+        Serial.println("[ERR] Ошибка парсинга JSON!");
+        Serial.println(error.c_str()); // Показываем ошибку
+        return;
     }
+
+    // Проверяем, что это массив
+    if (!doc.is<JsonArray>()) {
+        Serial.println("[ERR] Ожидается массив JSON!");
+        Serial.println(json);
+        return;
+    }
+
+    JsonArray jsonArray = doc.as<JsonArray>();
+
+    // Проверяем, что в массиве достаточно элементов
+    if (jsonArray.size() != 2) {
+        Serial.println("[ERR] Нарушена структура массива JSON!");
+        Serial.println(json);
+        return;
+    }
+
+    // Извлекаем элементы массива
+    String messageType = jsonArray[0].as<String>();
+    JsonObject params = jsonArray[1].as<JsonObject>();
+
+    if (!params.containsKey("params")) {
+        Serial.println("[ERR] JSON объект не содержит ключа 'params'!");
+        Serial.println(json);
+        return;
+    }
+
+    // Извлекаем параметры
+    JsonObject paramValues = params["params"].as<JsonObject>();
+
+    for (JsonPair kv : paramValues) {
+        std::string prmName = kv.key().c_str();
+        std::string prmValue = kv.value().as<std::string>();
+
+        if (state.count(prmName) != 0) {
+            state.at(prmName) = prmValue;
+        } else {
+            Serial.print("[ERR] Неизвестный параметр: ");
+            Serial.println(prmName.c_str());
+        }
+    }
+
+    // Вызываем callback
+    callback(state);
 }
 
-void AppexConnector::connectToRoom() {
-    // данные отсылаются в json
-    DynamicJsonDocument doc(1024);
-    JsonArray array = doc.to<JsonArray>();
-
-    // добавляем название события, в данном случае - "connectToRoom".
-    array.add("connectToRoom");
-
-    // добавляем id и пароль комнаты для прохождения аутентификации
-    JsonObject params = array.createNestedObject();
-    params["roomId"] = roomID;
-    params["roomPass"] = roomPass;
-
-    // преобразуем json в строку
-    String output;
-    serializeJson(doc, output);
-
-    // отправляем событие подключения к комнате 
-    socketIO.sendEVENT(output);
-}
-
-void AppexConnector::message(String eventType, JsonObject sendState) {
+void AppexConnector::message(const char* eventType, 
+                             const JsonObject & sendState) {
 
     // данные отсылаются в json
-    DynamicJsonDocument doc(1024);
+    JsonDocument doc;
     JsonArray array = doc.to<JsonArray>();
 
     // добавляем название события, обычно это 'update'
@@ -194,14 +118,20 @@ void AppexConnector::message(String eventType, JsonObject sendState) {
 
     // добавляем id и пароль комнаты для прохождения аутентификации,
     // добавляем обновленные данные
-    JsonObject params = array.createNestedObject();
+    JsonObject params = array.add<JsonObject>();
     params["roomId"] = roomID;
     params["roomPass"] = roomPass;
-    params["params"] = sendState;
+
+    if (!sendState.isNull()) {
+        params["params"] = sendState;
+    }
 
     // преобразуем json в строку
     String output;
-    serializeJson(doc, output);
+    if (serializeJson(doc, output) == 0) {
+        Serial.println("[ERR] Ошибка сериализации JSON!");
+        return;
+    }
 
     // шлем событие на сервер appex
     socketIO.sendEVENT(output);

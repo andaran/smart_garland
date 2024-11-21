@@ -26,7 +26,7 @@ public:
                    std::function<void(std::unordered_map<std::string, std::string>&)> callback);
 
     void connectToRoom();
-    void message(String eventType, JsonObject sendState);
+    void message(const char* eventType, const JsonObject& sendState);
     void setup();
     void tick();
 };
