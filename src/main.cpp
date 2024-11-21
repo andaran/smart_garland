@@ -16,7 +16,7 @@ JsonDocument jsonDoc;
 JsonObject state = jsonDoc.add<JsonObject>();
 
 bool stripState = true;
-bool streamState = true;
+byte streamState = 0;
 
 AppexConnector appex(roomIDSetting, roomPassSetting, state, appexCallback);
 
@@ -94,16 +94,18 @@ void appexCallback() {
 
 unsigned long lastUpdate = 0;
 void stripCallback(char* message) {
-    // Отправляем состояние ленты на сервер
+    // Стримим состояние ленты
 
-    //Serial.println("STRIP_STATE_START:" + String(message.c_str()) + ":STRIP_STATE_END");
-
-    if (millis() - lastUpdate >= 500 && streamState) {
+    if (streamState == 1 && millis() - lastUpdate >= 500 && updated) {
         updated = false;
         lastUpdate = millis();
 
         state["stripState"] = message;
         appex.update({"stripState"});
+    }
+    if (streamState == 2 && millis() - lastUpdate >= 100) {
+        lastUpdate = millis();
+        Serial.print("STRIP_STATE_START:" + String(message) + ":STRIP_STATE_END");
     }
 
     delete message;

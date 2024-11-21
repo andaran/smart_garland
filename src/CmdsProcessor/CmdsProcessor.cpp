@@ -4,7 +4,7 @@ CmdsProcessor::CmdsProcessor(EffectsProcessor * effectsProcessor,
                              StripProcessor * strip, 
                              JsonObject & state, 
                              bool & stripState,
-                             bool & streamState)
+                             byte & streamState)
     : state(state), stripState(stripState), streamState(streamState) {
     this->effectsProcessor = effectsProcessor;
     this->strip = strip;
@@ -55,16 +55,30 @@ String CmdsProcessor::power(String const & cmdArgs) {
 
 String CmdsProcessor::stream(String const & cmdArgs) {
     if (cmdArgs == "") {
-        String message = "Stream is ";
-        message += streamState ? "on" : "off";
+        String message = "Streaming ";
+        switch (streamState) {
+            case 0:
+                message += "is off";
+                break;
+            case 1:
+                message += "via Wi-Fi";
+                break;
+            case 2:
+                message += "via cable";
+                break;
+        }
         return message;
     }
-    if (cmdArgs == "on") {
-        streamState = true;
-        return "Stream turned on";
+    if (cmdArgs == "wifi") {
+        streamState = 1;
+        return "Stream switched to Wi-Fi";
+    }
+    if (cmdArgs == "cable") {
+        streamState = 2;
+        return "Stream switched to cable";
     }
     if (cmdArgs == "off") {
-        streamState = false;
+        streamState = 0;
         return "Stream turned off";
     }
     return "Unknown command";

@@ -14,14 +14,14 @@ public:
                   StripProcessor * strip, 
                   JsonObject & state, 
                   bool & stripState,
-                  bool & streamState);
+                  byte & streamState);
     String processCmds(String cmd);
 private:
     EffectsProcessor * effectsProcessor;
     StripProcessor * strip;
     JsonObject & state;
     bool & stripState;
-    bool & streamState;
+    byte & streamState;
 
     // Комманды
     String effect(String const & cmdArgs);
