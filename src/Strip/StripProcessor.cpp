@@ -8,6 +8,7 @@ StripProcessor::StripProcessor(Adafruit_NeoPixel & strip,
 void StripProcessor::begin() {
     strip.begin();
     strip.setBrightness(EEPROM.read(BRIGHTNESS_INDEX));
+    setStripState(EEPROM.read(POWER_INDEX));
 }
 
 void StripProcessor::setPixelColor(int i, byte r, byte g, byte b) {
@@ -62,6 +63,8 @@ Adafruit_NeoPixel & StripProcessor::getStrip() {
 
 void StripProcessor::setStripState(bool state) {
     stripState = state;
+    EEPROM.write(POWER_INDEX, state);
+    EEPROM.commit();
     if (stripState) {
         strip.show();
     } else {
