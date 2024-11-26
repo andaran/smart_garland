@@ -4,7 +4,12 @@
 #include <Adafruit_NeoPixel.h>
 #include <string>
 #include <Base64.h>
-#include <EEPROM.h>
+#include "../Storage/Storage.h"
+
+struct StripSettings {
+    bool power;
+    byte brightness;
+};
 
 class StripProcessor {
 public:
@@ -22,7 +27,7 @@ public:
     bool getStripState();
 private:
     Adafruit_NeoPixel & strip;
-    bool stripState = true;
+    StripSettings settings;
     std::function<void(char*)> callback;
     char* compressLEDs();
 };

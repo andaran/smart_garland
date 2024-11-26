@@ -1,6 +1,5 @@
 #include <Arduino.h>
 #include <Adafruit_NeoPixel.h>
-#include <EEPROM.h>
 #include <EncButton.h>
 
 #include "settings.h"
@@ -8,6 +7,7 @@
 #include "CmdsProcessor/CmdsProcessor.h"
 #include "EffectsProcessor/EffectsProcessor.h"
 #include "Strip/StripProcessor.h"
+#include "Storage/Storage.h"
 
 void appexCallback();
 void stripCallback(char* message);
@@ -33,8 +33,8 @@ void setup() {
     state["stripState"] = "";
     state["lastChange"] = 0;
 
-    // Инициализируем EEPROM
-    EEPROM.begin(512);
+    // Инициализируем память
+    Storage::begin();
 
     // запускаем Serial порт
     Serial.begin(115200);

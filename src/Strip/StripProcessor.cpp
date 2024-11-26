@@ -3,12 +3,24 @@
 StripProcessor::StripProcessor(Adafruit_NeoPixel & strip, 
              std::function<void(char*)> callback) : strip(strip) {
     this->callback = callback;
+
+    // Настройки ленты
+    settings = {true, 255};
 }
 
 void StripProcessor::begin() {
     strip.begin();
-    strip.setBrightness(EEPROM.read(BRIGHTNESS_INDEX));
-    setStripState(EEPROM.read(POWER_INDEX));
+
+    // Загружаем настройки
+    Storage::load<StripSettings>("strip-settings", settings, 
+                  [](const JsonDocument & doc, StripSettings & settings) {
+        settings.power = doc["power"] | true;
+        settings.brightness = doc["brightness"] | 255;
+    });
+
+    strip.setBrightness(settings.brightness);
+    clear();
+    show();
 }
 
 void StripProcessor::setPixelColor(int i, byte r, byte g, byte b) {
@@ -39,8 +51,12 @@ void StripProcessor::show() {
 }
 
 void StripProcessor::setBrightness(byte brightness) {
-    EEPROM.write(BRIGHTNESS_INDEX, brightness);
-    EEPROM.commit();
+    // Сохраняем яркость
+    settings.brightness = brightness;
+    Storage::save<StripSettings>("strip-settings", settings, 
+                  [](JsonDocument & doc, const StripSettings & settings) {
+        doc["brightness"] = settings.brightness;
+    });
 
     strip.setBrightness(brightness);
     strip.show();
@@ -51,9 +67,7 @@ byte StripProcessor::getBrightness() {
 }
 
 void StripProcessor::clear() {
-    for (int i = 0; i < NUM_LEDS; i++) {
-        strip.setPixelColor(i, strip.Color(0, 0, 0));
-    }
+    strip.clear();
     strip.show();
 }
 
@@ -62,10 +76,15 @@ Adafruit_NeoPixel & StripProcessor::getStrip() {
 }
 
 void StripProcessor::setStripState(bool state) {
-    stripState = state;
-    EEPROM.write(POWER_INDEX, state);
-    EEPROM.commit();
-    if (stripState) {
+    settings.power = state;
+    
+    // Сохраняем состояние ленты
+    Storage::save<StripSettings>("strip-settings", settings, 
+                  [](JsonDocument & doc, const StripSettings & settings) {
+        doc["power"] = settings.power;
+    });
+
+    if (state) {
         strip.show();
     } else {
         clear();
@@ -73,10 +92,10 @@ void StripProcessor::setStripState(bool state) {
 }
 
 void StripProcessor::switchStripState() {
-    stripState = !stripState;
-    setStripState(stripState);
+    settings.power = !settings.power;
+    setStripState(settings.power);
 }
 
 bool StripProcessor::getStripState() {
-    return stripState;
+    return settings.power;
 }
