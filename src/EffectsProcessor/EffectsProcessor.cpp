@@ -4,8 +4,12 @@ EffectsProcessor::EffectsProcessor(StripProcessor & strip) : strip(strip) {
 
     // Добавляем эффекты
     effects = {
+        // Простые эффекты
         {"test", new EffectTest(strip)},
-        {"rainbow", new EffectRainbow(strip)}
+        {"rainbow", new EffectRainbow(strip)},
+
+        // Эффекты на основе палитр
+        {"fire", new PaletteEffect(strip, 50, FIRE_PALETTE, FIRE_PALETTE_SIZE)}
     };
 
     setEffect("test");

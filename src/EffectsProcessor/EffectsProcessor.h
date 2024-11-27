@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "../Effects/Effect.h"
+#include "../Effects/PaletteEffect.h"
 #include "../Strip/StripProcessor.h"
 #include "settings.h"
 
