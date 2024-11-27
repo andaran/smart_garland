@@ -9,7 +9,7 @@ void EffectRainbow::playFrame() {
         Rgb color = wheel((i + step) & 255);
         strip.setPixelColor(i, color.r, color.g, color.b);
     }
-    step = (step + 5) % 256;
+    step = (step + 2) % 256;
     strip.show();
 }
 

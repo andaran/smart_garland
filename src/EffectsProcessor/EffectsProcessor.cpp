@@ -8,8 +8,37 @@ EffectsProcessor::EffectsProcessor(StripProcessor & strip) : strip(strip) {
         {"test", new EffectTest(strip)},
         {"rainbow", new EffectRainbow(strip)},
 
-        // Эффекты на основе палитр
-        {"fire", new PaletteEffect(strip, 50, FIRE_PALETTE, FIRE_PALETTE_SIZE)}
+        // Эффекты на основе палитр (по вертикали)
+        {"cyberpunk", new PaletteEffect(strip, 50, 
+            CYBERPUNK_PALETTE, CYBERPUNK_PALETTE_SIZE)},
+        {"sunset", new PaletteEffect(strip, 50,
+            SUNSET_PALETTE, SUNSET_PALETTE_SIZE)},
+        {"optimus", new PaletteEffect(strip, 50,
+            OPTIMUS_PALETTE, OPTIMUS_PALETTE_SIZE)},
+        {"warm", new PaletteEffect(strip, 50,
+            WARM_PALETTE, WARM_PALETTE_SIZE)},
+        {"cold", new PaletteEffect(strip, 50,
+            COLD_PALETTE, COLD_PALETTE_SIZE)},
+        {"hot", new PaletteEffect(strip, 50,
+            HOT_PALETTE, HOT_PALETTE_SIZE)},
+        {"pink", new PaletteEffect(strip, 50,
+            PINK_PALETTE, PINK_PALETTE_SIZE)},
+        {"comfy", new PaletteEffect(strip, 50,
+            COMFY_PALETTE, COMFY_PALETTE_SIZE)},
+        {"girl", new PaletteEffect(strip, 50,
+            GIRL_PALETTE, GIRL_PALETTE_SIZE)},
+        {"christmas", new PaletteEffect(strip, 50,
+            CHRISTMAS_PALETTE, CHRISTMAS_PALETTE_SIZE)},
+        {"acid", new PaletteEffect(strip, 50,
+            ACID_PALETTE, ACID_PALETTE_SIZE)},
+        {"smoke", new PaletteEffect(strip, 50,
+            SMOKE_PALETTE, SMOKE_PALETTE_SIZE)},
+        {"aurora", new PaletteEffect(strip, 50,
+            AURORA_PALETTE, AURORA_PALETTE_SIZE)},
+        {"redwhite", new PaletteEffect(strip, 50,
+            REDWHITE_PALETTE, REDWHITE_PALETTE_SIZE)},
+        {"ocean", new PaletteEffect(strip, 50,
+            OCEAN_PALETTE, OCEAN_PALETTE_SIZE)}
     };
 
     setEffect("test");
