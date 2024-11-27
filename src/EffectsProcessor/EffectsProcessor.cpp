@@ -46,6 +46,10 @@ EffectsProcessor::EffectsProcessor(StripProcessor & strip) : strip(strip) {
 
 bool EffectsProcessor::setEffect(String effect) {
     strip.clear();
+    if (effect == "random") {
+        setRandomEffect();
+        return true;
+    }
     for (int i = 0; i < effects.size(); i++) {
         if (effect == effects[i].first) {
             currentEffect = i;
@@ -62,4 +66,8 @@ String EffectsProcessor::getEffect() {
 void EffectsProcessor::tick() {
     if (!strip.getStripState()) return;
     effects[currentEffect].second->tick();
+}
+
+void EffectsProcessor::setRandomEffect() {
+    currentEffect = random(effects.size());
 }

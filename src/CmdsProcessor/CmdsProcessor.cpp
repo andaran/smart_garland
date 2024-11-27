@@ -30,6 +30,10 @@ String CmdsProcessor::effect(String const & cmdArgs) {
     if (cmdArgs == "") {
         return "Current effect is " + effectsProcessor.getEffect();
     }
+    if (cmdArgs == "random") {
+        effectsProcessor.setRandomEffect();
+        return "Effect set to " + effectsProcessor.getEffect();
+    }
     if (effectsProcessor.setEffect(cmdArgs)) {
         return "Effect set to " + cmdArgs;
     }
