@@ -23,6 +23,7 @@ String CmdsProcessor::processCmds(String cmd) {
     if (cmdName == "brightness") return brightness(cmdArgs);
     if (cmdName == "timer") return timer(cmdArgs);
     if (cmdName == "fs") return fs(cmdArgs);
+    if (cmdName == "slideshow") return slideshow(cmdArgs);
     return "Unknown command";
 }
 
@@ -174,4 +175,21 @@ String CmdsProcessor::fs(String const & cmdArgs) {
     }
 
     return "Unknown command";
+}
+
+String CmdsProcessor::slideshow(String const & cmdArgs) {
+    if (cmdArgs == "" || cmdArgs == "on") {
+        effectsProcessor.slideshowOn();
+        return "Slideshow started";
+    }
+    if (cmdArgs == "off") {
+        effectsProcessor.slideshowOff();
+        return "Slideshow stopped";
+    }
+    unsigned timeout = cmdArgs.toInt();
+    if (timeout <= 0) {
+        return "Invalid timeout";
+    }
+    effectsProcessor.slideshowOn(timeout);
+    return "Slideshow started with timeout " + String(timeout);
 }

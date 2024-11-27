@@ -41,35 +41,34 @@ EffectsProcessor::EffectsProcessor(StripProcessor & strip) : strip(strip) {
             OCEAN_PALETTE, OCEAN_PALETTE_SIZE)}
     };
 
-    settings = {"random", 30 * 1000};
+    settings = {"random", false, 30};
 }
 
 void EffectsProcessor::begin() {
     // Загружаем настройки
     Storage::load("effects-settings", [this](JsonDocument & doc) {
         settings.name = doc["name"] | "random";
-        settings.timeout = doc["timeout"] | 30 * 1000;
+        settings.slideshow = doc["slideshow"] | false;
+        settings.timeout = doc["timeout"] | 30;
     });
 
-    setEffect(settings.name);
+    if (settings.slideshow) {
+        slideshowOn();
+    } else {
+        setEffect(settings.name);
+    }
 }
 
 bool EffectsProcessor::setEffect(String effect) {
     strip.clear();
-    if (effect == "random") {
-        setRandomEffect();
-        return true;
-    }
     for (int i = 0; i < effects.size(); i++) {
         if (effect != effects[i].first) continue;
 
         currentEffect = i;
-        // Сохраняем эффект
-        settings.name = effect;
-        Storage::save("effects-settings", [this](JsonDocument & doc) {
-            doc["name"] = settings.name;
-        });
 
+        settings.name = effect;
+        settings.slideshow = false;
+        saveSettings();
         return true;
     }
     return false;
@@ -82,14 +81,40 @@ String EffectsProcessor::getEffect() {
 void EffectsProcessor::tick() {
     if (!strip.getStripState()) return;
     effects[currentEffect].second->tick();
+
+    // Slideshow
+    if (settings.slideshow && 
+        millis() - slideshowTimer > settings.timeout * 1000) {
+        setRandomEffect();
+        slideshowTimer = millis();
+    }
 }
 
 void EffectsProcessor::setRandomEffect() {
     currentEffect = random(effects.size());
-    
-    // Сохраняем эффект
     settings.name = effects[currentEffect].first;
+    saveSettings();
+}
+
+void EffectsProcessor::saveSettings() {
+    // Сохраняем настройки
     Storage::save("effects-settings", [this](JsonDocument & doc) {
         doc["name"] = settings.name;
+        doc["slideshow"] = settings.slideshow;
+        doc["timeout"] = settings.timeout;
     });
+}
+
+void EffectsProcessor::slideshowOn(unsigned timeout) {
+    if (timeout != 0) {
+        settings.timeout = timeout;
+    }
+    settings.slideshow = true;
+    saveSettings();
+}
+
+void EffectsProcessor::slideshowOff() {
+    settings.slideshow = false;
+    saveSettings();
+    setEffect(settings.name);
 }

@@ -31,4 +31,5 @@ private:
     String brightness(String const & cmdArgs);
     String timer(String const & cmdArgs);
     String fs(String const & cmdArgs);
+    String slideshow(String const & cmdArgs);
 };

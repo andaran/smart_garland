@@ -16,6 +16,7 @@
 
 struct EfectsSettings {
     String name;
+    bool slideshow;
     unsigned int timeout;
 };
 
@@ -26,12 +27,17 @@ public:
     void setRandomEffect();
     String getEffect();
 
+    void saveSettings();
+    void slideshowOn(unsigned timeout = 0);
+    void slideshowOff();
+
     void begin();
     void tick();
 
 private:
     StripProcessor & strip;
     unsigned currentEffect;
+    unsigned long slideshowTimer = 0;
 
     EfectsSettings settings;
 
