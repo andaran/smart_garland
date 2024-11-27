@@ -22,6 +22,7 @@ String CmdsProcessor::processCmds(String cmd) {
     if (cmdName == "stream") return stream(cmdArgs);
     if (cmdName == "brightness") return brightness(cmdArgs);
     if (cmdName == "timer") return timer(cmdArgs);
+    if (cmdName == "fs") return fs(cmdArgs);
     return "Unknown command";
 }
 
@@ -111,4 +112,62 @@ String CmdsProcessor::timer(String const & cmdArgs) {
     }
     swithTimer = millis() + timer * 1000 * 60;
     return "Timer set to " + String(timer) + " minutes";
+}
+
+String CmdsProcessor::fs(String const & cmdArgs) {
+    if (cmdArgs == "format") {
+        LittleFS.format();
+        return "File system formatted";
+    }
+    if (cmdArgs == "list") {
+        Dir dir = LittleFS.openDir("/");
+        String files = "Files:\n";
+        while (dir.next()) {
+            files += "  " + dir.fileName() + "\n";
+        }
+        return files;
+    }
+    if (cmdArgs == "status") {
+        FSInfo fs_info;
+        LittleFS.info(fs_info);
+
+        unsigned long total = fs_info.totalBytes / 1024;
+        unsigned long used = fs_info.usedBytes / 1024;
+        unsigned long available = total - used;
+        double percent = ((double) used / (double) total) * 100;
+
+        String status = "File system status (in Kb):";
+        status += "\nTotal: " + String(total);
+        status += "\nUsed: " + String(used);
+        status += "\nAvailable: " + String(available);
+        status += "\nUsage: " + String(percent, 2) + "%";
+        return status;
+    }
+
+    // Команды с несколькими аргументами
+    int spaceIndex = cmdArgs.indexOf(" ");
+    String cmdName = cmdArgs.substring(0, spaceIndex);
+    String cmdArgs2 = spaceIndex == -1 ? "" : 
+        cmdArgs.substring(spaceIndex + 1);
+    
+    if (cmdName == "remove") {
+        if (cmdArgs2 == "") {
+            return "Filename is required";
+        }
+        if (Storage::remove(cmdArgs2.c_str())) {
+            return "File removed";
+        }
+        return "File not found";
+    }
+    if (cmdName == "read") {
+        if (cmdArgs2 == "") {
+            return "Filename is required";
+        }
+        if (!Storage::exists(cmdArgs2.c_str())) {
+            return "File not found";
+        }
+        return Storage::read(cmdArgs2.c_str()).c_str();
+    }
+
+    return "Unknown command";
 }

@@ -17,3 +17,22 @@ void Storage::begin() {
         return;
     }
 }
+
+std::string Storage::read(const char* filename) {
+    if (!LittleFS.exists(filename)) {
+        return "";
+    }
+
+    File file = LittleFS.open(filename, "r");
+    if (!file) {
+        return "";
+    }
+
+    std::string content;
+    while (file.available()) {
+        content += (char) file.read();
+    }
+
+    file.close();
+    return content;
+}

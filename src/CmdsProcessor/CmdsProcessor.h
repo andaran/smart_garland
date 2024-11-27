@@ -7,6 +7,7 @@
 
 #include "../EffectsProcessor/EffectsProcessor.h"
 #include "../Strip/StripProcessor.h"
+#include "../Storage/Storage.h"
 
 class CmdsProcessor {
 public:
@@ -29,4 +30,5 @@ private:
     String stream(String const & cmdArgs);
     String brightness(String const & cmdArgs);
     String timer(String const & cmdArgs);
+    String fs(String const & cmdArgs);
 };

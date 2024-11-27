@@ -17,6 +17,7 @@ public:
 
     static bool exists(const char* filename);
     static bool remove(const char* filename);
+    static std::string read(const char* filename);
 };
 
 #include "Storage.tpp"
