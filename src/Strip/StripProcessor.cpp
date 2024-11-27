@@ -12,8 +12,7 @@ void StripProcessor::begin() {
     strip.begin();
 
     // Загружаем настройки
-    Storage::load<StripSettings>("strip-settings", settings, 
-                  [](const JsonDocument & doc, StripSettings & settings) {
+    Storage::load("strip-settings", [this](JsonDocument & doc) {
         settings.power = doc["power"] | true;
         settings.brightness = doc["brightness"] | 255;
     });
@@ -53,8 +52,7 @@ void StripProcessor::show() {
 void StripProcessor::setBrightness(byte brightness) {
     // Сохраняем яркость
     settings.brightness = brightness;
-    Storage::save<StripSettings>("strip-settings", settings, 
-                  [](JsonDocument & doc, const StripSettings & settings) {
+    Storage::save("strip-settings", [this](JsonDocument & doc) {
         doc["brightness"] = settings.brightness;
     });
 
@@ -79,8 +77,7 @@ void StripProcessor::setStripState(bool state) {
     settings.power = state;
     
     // Сохраняем состояние ленты
-    Storage::save<StripSettings>("strip-settings", settings, 
-                  [](JsonDocument & doc, const StripSettings & settings) {
+    Storage::save("strip-settings", [this](JsonDocument & doc) {
         doc["power"] = settings.power;
     });
 
