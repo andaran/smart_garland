@@ -43,6 +43,9 @@ void setup() {
     // настраиваем ленту
     strip.begin();
 
+    // настраиваем эффекты
+    effectsProcessor.begin();
+
     // настраиваем кнопку
     pinMode(BUTTON_PIN, INPUT_PULLUP);
 

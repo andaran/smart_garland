@@ -41,7 +41,17 @@ EffectsProcessor::EffectsProcessor(StripProcessor & strip) : strip(strip) {
             OCEAN_PALETTE, OCEAN_PALETTE_SIZE)}
     };
 
-    setEffect("test");
+    settings = {"random", 30 * 1000};
+}
+
+void EffectsProcessor::begin() {
+    // Загружаем настройки
+    Storage::load("effects-settings", [this](JsonDocument & doc) {
+        settings.name = doc["name"] | "random";
+        settings.timeout = doc["timeout"] | 30 * 1000;
+    });
+
+    setEffect(settings.name);
 }
 
 bool EffectsProcessor::setEffect(String effect) {
@@ -51,10 +61,16 @@ bool EffectsProcessor::setEffect(String effect) {
         return true;
     }
     for (int i = 0; i < effects.size(); i++) {
-        if (effect == effects[i].first) {
-            currentEffect = i;
-            return true;
-        }
+        if (effect != effects[i].first) continue;
+
+        currentEffect = i;
+        // Сохраняем эффект
+        settings.name = effect;
+        Storage::save("effects-settings", [this](JsonDocument & doc) {
+            doc["name"] = settings.name;
+        });
+
+        return true;
     }
     return false;
 }
@@ -70,4 +86,10 @@ void EffectsProcessor::tick() {
 
 void EffectsProcessor::setRandomEffect() {
     currentEffect = random(effects.size());
+    
+    // Сохраняем эффект
+    settings.name = effects[currentEffect].first;
+    Storage::save("effects-settings", [this](JsonDocument & doc) {
+        doc["name"] = settings.name;
+    });
 }
