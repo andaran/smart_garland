@@ -8,6 +8,7 @@
 #include "EffectsProcessor/EffectsProcessor.h"
 #include "Strip/StripProcessor.h"
 #include "Storage/Storage.h"
+#include "Timeout/Timeout.h"
 
 void appexCallback();
 void stripCallback(char* message);
@@ -72,6 +73,9 @@ void loop() {
     appex.tick();
     effectsProcessor.tick();
     btn.tick();
+
+    // Обработка таймаутов
+    Timeout::getInstance().tick();
 
     // Обработка кнопки
     if (btn.click()) strip.switchStripState();
