@@ -7,6 +7,9 @@ EffectsProcessor::EffectsProcessor(StripProcessor & strip) : strip(strip) {
         // Простые эффекты
         {"test", new EffectTest(strip)},
         {"rainbow", new EffectRainbow(strip)},
+        {"shim-gold", new EffectShimColor(strip, 255, 215, 0)},
+        {"shim-blue", new EffectShimColor(strip, 52, 152, 219)},
+        {"shim-red", new EffectShimColor(strip, 231, 76, 60)},
 
         // Эффекты на основе палитр (по вертикали)
         {"cyberpunk", new PaletteEffect(strip, 50, 

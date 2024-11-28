@@ -33,6 +33,9 @@ void setup() {
     state["stripState"] = "";
     state["lastChange"] = 0;
 
+    // Рандомизируем seed
+    randomSeed(analogRead(0));
+
     // Инициализируем память
     Storage::begin();
 

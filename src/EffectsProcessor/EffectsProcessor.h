@@ -11,6 +11,7 @@
 
 #include "../Effects/Test/Test.h"
 #include "../Effects/Rainbow/Rainbow.h"
+#include "../Effects/ShimColor/ShimColor.h"
 
 #include "../Storage/Storage.h"
 
