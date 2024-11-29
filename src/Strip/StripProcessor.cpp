@@ -1,7 +1,7 @@
 #include "StripProcessor.h"
 
-StripProcessor::StripProcessor(Adafruit_NeoPixel & strip, 
-             std::function<void(char*)> callback) : strip(strip) {
+StripProcessor::StripProcessor(Adafruit_NeoPixel & strip, byte & streamState,
+             std::function<void(char*)> callback) : strip(strip), streamState(streamState) {
     this->callback = callback;
 
     // Настройки ленты
@@ -46,7 +46,10 @@ char* StripProcessor::compressLEDs() {
 
 void StripProcessor::show() {
     strip.show();
-    callback(compressLEDs());
+
+    if (streamState) {
+        callback(compressLEDs());
+    }
 }
 
 void StripProcessor::setBrightness(byte brightness) {

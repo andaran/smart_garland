@@ -22,7 +22,7 @@ JsonObject state = jsonDoc.add<JsonObject>();
 Button btn(BUTTON_PIN);
 Adafruit_NeoPixel ledStrip(NUM_LEDS, LED_PIN, NEO_GRB + NEO_KHZ800);
 AppexConnector appex(roomIDSetting, roomPassSetting, state, appexCallback);
-StripProcessor strip(ledStrip, stripCallback);
+StripProcessor strip(ledStrip, streamState, stripCallback);
 EffectsProcessor effectsProcessor(strip);
 CmdsProcessor cmdsProcessor(effectsProcessor, strip, state, streamState, switchTimer);
 
