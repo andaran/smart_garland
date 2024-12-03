@@ -9,6 +9,7 @@
 class Effect {
 public:
     Effect(StripProcessor & strip, unsigned long timeout);
+    virtual ~Effect() = default;
 
     void tick();
     virtual void playFrame() = 0;
