@@ -7,9 +7,6 @@ EffectsProcessor::EffectsProcessor(StripProcessor & strip) : strip(strip) {
         // Простые эффекты
         {"test", new EffectTest(strip)},
         {"rainbow", new EffectRainbow(strip)},
-        {"shim-gold", new EffectShimColor(strip, 255, 215, 0)},
-        {"shim-blue", new EffectShimColor(strip, 52, 152, 219)},
-        {"shim-red", new EffectShimColor(strip, 231, 76, 60)},
 
         // Эффекты на основе палитр (по вертикали)
         {"cyberpunk", new PaletteEffect(strip, 50, 
@@ -41,7 +38,7 @@ EffectsProcessor::EffectsProcessor(StripProcessor & strip) : strip(strip) {
         {"redwhite", new PaletteEffect(strip, 50,
             REDWHITE_PALETTE, REDWHITE_PALETTE_SIZE)},
         {"ocean", new PaletteEffect(strip, 50,
-            OCEAN_PALETTE, OCEAN_PALETTE_SIZE)}
+            OCEAN_PALETTE, OCEAN_PALETTE_SIZE)},
     };
 
     settings = {"random", false, 30};

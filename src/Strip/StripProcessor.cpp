@@ -99,3 +99,32 @@ void StripProcessor::switchStripState() {
 bool StripProcessor::getStripState() {
     return settings.power;
 }
+
+// Для плавного перехода цветов
+void StripProcessor::initSmoothColorChange(
+    float * stepsR, float * stepsG, float * stepsB) {
+    for (int i = 0; i < NUM_LEDS; i++) {
+        // Получаем текущий цвет
+        curR[i] = (float) ((strip.getPixelColor(i) >> 16) & 0xFF);
+        curG[i] = (float) ((strip.getPixelColor(i) >> 8) & 0xFF);
+        curB[i] = (float) (strip.getPixelColor(i) & 0xFF);
+    }
+
+    // Устанавливаем шаги изменения цвета
+    delete this->stepsR;
+    delete this->stepsG;
+    delete this->stepsB;
+    this->stepsR = stepsR;
+    this->stepsG = stepsG;
+    this->stepsB = stepsB;
+}
+
+void StripProcessor::stepSmoothColorChange() {
+    for (int i = 0; i < NUM_LEDS; i++) {
+        curR[i] += stepsR[i];
+        curG[i] += stepsG[i];
+        curB[i] += stepsB[i];
+
+        strip.setPixelColor(i, curR[i], curG[i], curB[i]);
+    }
+}

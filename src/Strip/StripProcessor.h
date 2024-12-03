@@ -25,10 +25,22 @@ public:
     void setStripState(bool state);
     void switchStripState();
     bool getStripState();
+
+    // Для плавного перехода цветов
+    void initSmoothColorChange(float * stepsR, float * stepsG, float * stepsB);
+    void stepSmoothColorChange();
 private:
     Adafruit_NeoPixel & strip;
     byte & streamState;
     StripSettings settings;
     std::function<void(char*)> callback;
     char* compressLEDs();
+
+    // Для плавного перехода цветов
+    float curR[NUM_LEDS];
+    float curG[NUM_LEDS];
+    float curB[NUM_LEDS];
+    float * stepsR;
+    float * stepsG;
+    float * stepsB;
 };
