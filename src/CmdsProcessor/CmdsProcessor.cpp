@@ -33,10 +33,12 @@ String CmdsProcessor::effect(String const & cmdArgs) {
         return "Current effect is " + effectsProcessor.getEffect();
     }
     if (cmdArgs == "random") {
+        effectsProcessor.slideshowOff();
         effectsProcessor.setRandomEffect();
         return "Effect set to " + effectsProcessor.getEffect();
     }
     if (effectsProcessor.setEffect(cmdArgs)) {
+        effectsProcessor.slideshowOff();
         return "Effect set to " + cmdArgs;
     }
     return "Effect not found";

@@ -36,11 +36,13 @@ public:
 
 private:
     StripProcessor & strip;
-    unsigned currentEffect;
     unsigned long slideshowTimer = 0;
 
     EfectsSettings settings;
 
+    Effect * createEffect(String name);
+    Effect * currentEffect;
+
     // Effects
-    std::vector<std::pair<String, Effect*>> effects;
+    std::vector<String> effects;
 };
