@@ -8,9 +8,11 @@
 #include "../Effects/PaletteEffect.h"
 #include "../Strip/StripProcessor.h"
 #include "settings.h"
+#include "structs.h"
 
 #include "../Effects/Test/Test.h"
 #include "../Effects/Rainbow/Rainbow.h"
+#include "../Effects/Stripes/Stripes.h"
 
 #include "../Storage/Storage.h"
 

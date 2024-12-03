@@ -8,3 +8,9 @@ struct SmoothTransition {
     unsigned currentStep = 0;
     unsigned maxSteps = 0;
 };
+
+struct Color {
+    byte r;
+    byte g;
+    byte b;
+};
