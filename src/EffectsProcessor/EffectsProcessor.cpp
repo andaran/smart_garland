@@ -116,5 +116,4 @@ void EffectsProcessor::slideshowOn(unsigned timeout) {
 
 void EffectsProcessor::slideshowOff() {
     settings.slideshow = false;
-    setEffect(settings.name);
 }
