@@ -4,6 +4,7 @@
 #include <Adafruit_NeoPixel.h>
 
 #include "../Strip/StripProcessor.h"
+#include "../Storage/Storage.h"
 #include "settings.h"
  
 class Effect {
@@ -18,4 +19,8 @@ protected:
     StripProcessor & strip;
     unsigned long timeout = 0;
     unsigned long timer = 0;
+    std::vector<int> turns;
+
+    byte getTurnNumber(int index);
+    int getAbsoluteIndex(byte turn, int index);
 };
