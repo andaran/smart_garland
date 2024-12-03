@@ -33,4 +33,5 @@ private:
     String fs(String const & cmdArgs);
     String slideshow(String const & cmdArgs);
     String memory(String const & cmdArgs);
+    String turns(String const & cmdArgs);
 };

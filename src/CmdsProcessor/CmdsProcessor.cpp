@@ -25,6 +25,7 @@ String CmdsProcessor::processCmds(String cmd) {
     if (cmdName == "fs") return fs(cmdArgs);
     if (cmdName == "slideshow") return slideshow(cmdArgs);
     if (cmdName == "memory") return memory(cmdArgs);
+    if (cmdName == "turns") return turns(cmdArgs);
     return "Unknown command";
 }
 
@@ -207,4 +208,40 @@ String CmdsProcessor::memory(String const & cmdArgs) {
     status += "\nHeap fragmentation: " + String(ESP.getHeapFragmentation());
     status += "\nHeap usage: " + String(usagePercent, 2) + "%";
     return status;
+}
+
+// Обновить количества светодиодов в каждом из витков
+String CmdsProcessor::turns(String const & cmdArgs) {
+    // cmdArgs = "1 2 3 4 5 6 7 8 9 10"
+    std::vector<int> turns;
+    int spaceIndex = 0;
+    while (spaceIndex != -1) {
+        int nextSpaceIndex = cmdArgs.indexOf(" ", spaceIndex + 1);
+        String turn = cmdArgs.substring(spaceIndex, nextSpaceIndex);
+        turns.push_back(turn.toInt());
+        spaceIndex = nextSpaceIndex;
+    }
+
+    // Валидация
+    int count = 0;
+    for (int i = 0; i < turns.size(); i++) {
+        if (turns[i] < 0) {
+            return "Invalid turn number";
+        }
+        count += turns[i];
+    }
+    if (count != NUM_LEDS) {
+        return "Invalid turns count";
+    }
+
+    // Сохраняем в память
+    Storage::save("turns", [&turns](JsonDocument & doc) {
+        JsonArray arr = doc.createNestedArray("turns");
+        for (int i = 0; i < turns.size(); i++) {
+            arr.add(turns[i]);
+        }
+        doc["size"] = turns.size();
+    });
+
+    return "Turns updated";
 }
