@@ -24,6 +24,7 @@ String CmdsProcessor::processCmds(String cmd) {
     if (cmdName == "timer") return timer(cmdArgs);
     if (cmdName == "fs") return fs(cmdArgs);
     if (cmdName == "slideshow") return slideshow(cmdArgs);
+    if (cmdName == "memory") return memory(cmdArgs);
     return "Unknown command";
 }
 
@@ -192,4 +193,16 @@ String CmdsProcessor::slideshow(String const & cmdArgs) {
     }
     effectsProcessor.slideshowOn(timeout);
     return "Slideshow started with timeout " + String(timeout);
+}
+
+String CmdsProcessor::memory(String const & cmdArgs) {
+    int freeHeap = ESP.getFreeHeap();
+    float usagePercent = (float)(81920 - freeHeap) / 81920 * 100.0;
+
+    String status = "Memory status (in bytes):";
+    status += "\nTotal heap: 81920";
+    status += "\nFree heap: " + String(freeHeap);
+    status += "\nHeap fragmentation: " + String(ESP.getHeapFragmentation());
+    status += "\nHeap usage: " + String(usagePercent, 2) + "%";
+    return status;
 }
