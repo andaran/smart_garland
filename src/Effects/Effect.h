@@ -6,7 +6,7 @@
 #include "../Strip/StripProcessor.h"
 #include "../Storage/Storage.h"
 #include "settings.h"
- 
+
 class Effect {
 public:
     Effect(StripProcessor & strip, unsigned long timeout);

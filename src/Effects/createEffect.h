@@ -7,6 +7,6 @@
 #include "Rainbow/Rainbow.h"
 #include "Stripes/Stripes.h"
 #include "Rain/Rain.h"
-#include "PaletteEffect.h"
+#include "Palette/PaletteEffect.h"
 
 Effect * createEffect(StripProcessor & strip, String name);
