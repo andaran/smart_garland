@@ -6,7 +6,7 @@ EffectsProcessor::EffectsProcessor(StripProcessor & strip) : strip(strip) {
     effects = {
         "test", "rainbow", "cyberpunk", "sunset", "optimus", "warm", "cold", 
         "hot", "pink", "comfy", "girl", "christmas", "acid", "smoke", 
-        "aurora", "redwhite", "ocean", "candy", "police", "blueberry-candy",
+        "aurora", "redwhite", "ocean", "fog", "candy", "police", "blueberry-candy",
         "lemonade", "mint-candy"
     };
 
@@ -48,6 +48,8 @@ Effect * EffectsProcessor::createEffect(String name) {
         strip, 50, REDWHITE_PALETTE, REDWHITE_PALETTE_SIZE);
     if (name == "ocean") return new PaletteEffect(
         strip, 50, OCEAN_PALETTE, OCEAN_PALETTE_SIZE);
+    if (name == "fog") return new PaletteEffect(
+        strip, 50, FOG_PALETTE, FOG_PALETTE_SIZE);
     // Эффекты - полоски
     if (name == "candy") return new EffectStripes(
         strip, {180, 180, 180}, {255, 0, 0});
@@ -59,6 +61,8 @@ Effect * EffectsProcessor::createEffect(String name) {
         strip, {241, 196, 15}, {255, 65, 24});
     if (name == "mint-candy") return new EffectStripes(
         strip, {16, 255, 126}, {156, 136, 255});
+    if (name == "strawberry") return new EffectStripes(
+        strip, {232, 65, 24}, {76, 209, 55});
     return nullptr;
 }
 
