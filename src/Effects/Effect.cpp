@@ -13,6 +13,9 @@ Effect::Effect(StripProcessor & strip, unsigned long timeout) :
 }
 
 void Effect::tick() {
+    if (backgroundEffect != nullptr) {
+        backgroundEffect->tick();
+    }
     if (millis() - timer >= timeout) {
         timer = millis();
         playFrame();

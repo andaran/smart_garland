@@ -5,7 +5,8 @@
 #include <vector>
 
 #include "../Effects/Effect.h"
-#include "../Effects/PaletteEffect.h"
+//#include "../Effects/PaletteEffect.h"
+#include "../Effects/createEffect.h"
 #include "../Strip/StripProcessor.h"
 #include "settings.h"
 #include "structs.h"
@@ -13,6 +14,7 @@
 #include "../Effects/Test/Test.h"
 #include "../Effects/Rainbow/Rainbow.h"
 #include "../Effects/Stripes/Stripes.h"
+#include "../Effects/Rain/Rain.h"
 
 #include "../Storage/Storage.h"
 
@@ -36,13 +38,13 @@ public:
     void begin();
     void tick();
 
+    //static Effect * createEffect(StripProcessor & strip, String name);
+
 private:
     StripProcessor & strip;
     unsigned long slideshowTimer = 0;
 
     EfectsSettings settings;
-
-    Effect * createEffect(String name);
     Effect * currentEffect;
 
     // Effects

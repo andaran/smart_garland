@@ -20,6 +20,7 @@ protected:
     unsigned long timeout = 0;
     unsigned long timer = 0;
     std::vector<int> turns;
+    Effect * backgroundEffect = nullptr;
 
     byte getTurnNumber(int index);
     int getAbsoluteIndex(byte turn, int index);
