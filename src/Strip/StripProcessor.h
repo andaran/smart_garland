@@ -1,6 +1,7 @@
 #pragma once
 
 #include "settings.h"
+#include "structs.h"
 #include <Adafruit_NeoPixel.h>
 #include <string>
 #include <Base64.h>
@@ -26,7 +27,14 @@ public:
     void switchStripState();
     bool getStripState();
 
+    // Foreground layer
+    void setFgLayerState(bool state);
+    void clearFgLayer();
+    void setFgLayerColor(int i, Color * color);
+
 private:
+    Color * fgLayer[NUM_LEDS];
+    bool fgLayerActive = false;
     Adafruit_NeoPixel & strip;
     byte & streamState;
     StripSettings settings;

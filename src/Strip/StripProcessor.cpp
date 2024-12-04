@@ -45,6 +45,14 @@ char* StripProcessor::compressLEDs() {
 }
 
 void StripProcessor::show() {
+    if (fgLayerActive) {
+        for (int i = 0; i < NUM_LEDS; i++) {
+            if (fgLayer[i] == nullptr) continue;
+            strip.setPixelColor(i, 
+                strip.Color(fgLayer[i]->r, fgLayer[i]->g, fgLayer[i]->b));
+        }
+    }
+
     strip.show();
 
     if (streamState) {
@@ -98,4 +106,19 @@ void StripProcessor::switchStripState() {
 
 bool StripProcessor::getStripState() {
     return settings.power;
+}
+
+// Foreground layer
+void StripProcessor::setFgLayerState(bool state) {
+    fgLayerActive = state;
+}
+
+void StripProcessor::clearFgLayer() {
+    for (int i = 0; i < NUM_LEDS; i++) {
+        fgLayer[i] = nullptr;
+    }
+}
+
+void StripProcessor::setFgLayerColor(int i, Color * color) {
+    fgLayer[i] = color;
 }
