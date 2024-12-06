@@ -81,3 +81,19 @@ void EffectsProcessor::slideshowOn(unsigned timeout) {
 void EffectsProcessor::slideshowOff() {
     settings.slideshow = false;
 }
+
+// Анимации
+
+void EffectsProcessor::setupAnimation(String name) {
+    slideshowOff();
+    delete currentEffect;
+    currentEffect = new SetupAnimation(strip, name);
+}
+
+Effect * EffectsProcessor::getEffectPtr() {
+    return currentEffect;
+}
+
+void EffectsProcessor::endSetup() {
+    setEffect(getEffect());
+}

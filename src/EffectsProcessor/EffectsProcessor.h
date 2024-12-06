@@ -10,10 +10,7 @@
 #include "settings.h"
 #include "structs.h"
 
-#include "../Effects/Test/Test.h"
-#include "../Effects/Rainbow/Rainbow.h"
-#include "../Effects/Stripes/Stripes.h"
-#include "../Effects/Rain/Rain.h"
+#include "../Effects/Setup/SetupAnimation.h"
 
 #include "../Storage/Storage.h"
 
@@ -29,6 +26,7 @@ public:
     bool setEffect(String effect);
     void setRandomEffect();
     String getEffect();
+    Effect * getEffectPtr();
 
     void saveSettings();
     void slideshowOn(unsigned timeout = 0);
@@ -36,6 +34,9 @@ public:
 
     void begin();
     void tick();
+
+    void setupAnimation(String name);
+    void endSetup();
 
 private:
     StripProcessor & strip;

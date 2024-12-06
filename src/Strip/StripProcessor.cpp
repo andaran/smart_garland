@@ -80,6 +80,10 @@ void StripProcessor::clear() {
     strip.show();
 }
 
+void StripProcessor::stealthClear() {
+    strip.clear();
+}
+
 Adafruit_NeoPixel & StripProcessor::getStrip() {
     return strip;
 }

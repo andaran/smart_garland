@@ -17,17 +17,29 @@ String CmdsProcessor::processCmds(String cmd) {
     String cmdName = cmd.substring(0, spaceIndex);
     String cmdArgs = spaceIndex == -1 ? "" : cmd.substring(spaceIndex + 1);
 
-    if (cmdName == "effect") return effect(cmdArgs);
-    if (cmdName == "power") return power(cmdArgs);
-    if (cmdName == "stream") return stream(cmdArgs);
-    if (cmdName == "brightness") return brightness(cmdArgs);
-    if (cmdName == "timer") return timer(cmdArgs);
-    if (cmdName == "fs") return fs(cmdArgs);
-    if (cmdName == "slideshow") return slideshow(cmdArgs);
+    if (cmdName == "setup") return setup(cmdArgs);
     if (cmdName == "memory") return memory(cmdArgs);
-    if (cmdName == "turns") return turns(cmdArgs);
+    if (cmdName == "fs") return fs(cmdArgs);
+    if (cmdName == "stream") return stream(cmdArgs);
+    switch (cmdsState) {
+        case INITAL:
+            if (cmdName == "effect") return effect(cmdArgs);
+            if (cmdName == "power") return power(cmdArgs);
+            if (cmdName == "brightness") return brightness(cmdArgs);
+            if (cmdName == "timer") return timer(cmdArgs);
+            if (cmdName == "slideshow") return slideshow(cmdArgs);
+            if (cmdName == "turns") return turns(cmdArgs);
+            break;
+        case SETUP_ANIMATION:
+            if (cmdName == "led") return led(cmdArgs);
+            break;
+    }
     return "Unknown command";
 }
+
+///////////////////////////////////
+/// Команды основного состояния ///
+///////////////////////////////////
 
 String CmdsProcessor::effect(String const & cmdArgs) {
     if (cmdArgs == "") {
@@ -244,4 +256,93 @@ String CmdsProcessor::turns(String const & cmdArgs) {
     });
 
     return "Turns updated";
+}
+
+/////////////////////////////
+/// Универсальные команды ///
+/////////////////////////////
+
+String CmdsProcessor::setup(String const & cmdArgs) {
+    // setup animation <name>
+    // setup text <name>
+    // setup done
+
+    if (cmdArgs == "done") {
+        cmdsState = INITAL;
+        setupName = "";
+        effectsProcessor.endSetup();
+        return "Setup done";
+    }
+
+    // Команды с несколькими аргументами
+    int spaceIndex = cmdArgs.indexOf(" ");
+    String cmdName = cmdArgs.substring(0, spaceIndex);
+    String cmdArgs2 = spaceIndex == -1 ? "" : 
+        cmdArgs.substring(spaceIndex + 1);
+
+    if (cmdName == "animation") {
+        cmdsState = SETUP_ANIMATION;
+        setupName = cmdArgs2;
+        effectsProcessor.setupAnimation(cmdArgs2);
+        return "Setup animation " + cmdArgs2;
+    }
+    if (cmdName == "text") {
+        cmdsState = SETUP_TEXT;
+        setupName = cmdArgs2;
+        return "Setup text " + cmdArgs2;
+    }
+
+    return "Unknown command";
+}
+
+//////////////////////////////////
+/// Команды настройки анимации ///
+//////////////////////////////////
+
+String CmdsProcessor::led(String const & cmdArgs) {
+    // led add <index> <r> <g> <b>
+    // led remove <index>
+    int spaceIndex = cmdArgs.indexOf(" ");
+    String cmdName = cmdArgs.substring(0, spaceIndex);
+    String cmdArgs2 = spaceIndex == -1 ? "" : 
+        cmdArgs.substring(spaceIndex + 1);
+
+    if (cmdName == "add") {
+        spaceIndex = cmdArgs2.indexOf(" ");
+        if (spaceIndex == -1) return "Invalid command";
+        String index = cmdArgs2.substring(0, spaceIndex);
+        String cmdArgs3 = cmdArgs2.substring(spaceIndex + 1);
+
+        int i = index.toInt();
+        if (i < 0 || i >= NUM_LEDS) return "Invalid led index";
+
+        spaceIndex = cmdArgs3.indexOf(" ");
+        if (spaceIndex == -1) return "Invalid command";
+        String r = cmdArgs3.substring(0, spaceIndex);
+        String cmdArgs4 = cmdArgs3.substring(spaceIndex + 1);
+
+        int rInt = r.toInt();
+        if (rInt < 0 || rInt > 255) return "Invalid color value";
+
+        spaceIndex = cmdArgs4.indexOf(" ");
+        if (spaceIndex == -1) return "Invalid command";
+        String g = cmdArgs4.substring(0, spaceIndex);
+        String b = cmdArgs4.substring(spaceIndex + 1);
+        
+        int gInt = g.toInt();
+        int bInt = b.toInt();
+        if (gInt < 0 || gInt > 255) return "Invalid color value";
+        if (bInt < 0 || bInt > 255) return "Invalid color value";
+
+        static_cast<SetupAnimation*>(effectsProcessor.getEffectPtr())
+            ->addLed(i, rInt, gInt, bInt);
+        return "Led added";
+    }
+    if (cmdName == "remove") {
+        static_cast<SetupAnimation*>(effectsProcessor.getEffectPtr())
+            ->removeLed(cmdArgs2.toInt());
+        return "Led removed";
+    }
+
+    return "Unknown command";
 }

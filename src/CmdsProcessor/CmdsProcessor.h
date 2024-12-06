@@ -8,6 +8,7 @@
 #include "../EffectsProcessor/EffectsProcessor.h"
 #include "../Strip/StripProcessor.h"
 #include "../Storage/Storage.h"
+#include "../Effects/setup/SetupAnimation.h"
 
 class CmdsProcessor {
 public:
@@ -24,7 +25,16 @@ private:
     byte & streamState;
     unsigned long & swithTimer;
 
-    // Комманды
+    enum states {
+        INITAL,
+        SETUP_ANIMATION,
+        SETUP_TEXT,
+        SETUP_MODEL
+    };
+    byte cmdsState = INITAL;
+    String setupName = "";
+
+    // Комманды основного состояния
     String effect(String const & cmdArgs);
     String power(String const & cmdArgs);
     String stream(String const & cmdArgs);
@@ -34,4 +44,6 @@ private:
     String slideshow(String const & cmdArgs);
     String memory(String const & cmdArgs);
     String turns(String const & cmdArgs);
+    String setup(String const & cmdArgs);
+    String led(String const & cmdArgs);
 };

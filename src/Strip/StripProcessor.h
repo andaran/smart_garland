@@ -21,6 +21,7 @@ public:
     void setBrightness(byte brightness);
     byte getBrightness();
     void clear();
+    void stealthClear();
     Adafruit_NeoPixel & getStrip();
     void begin();
     void setStripState(bool state);
