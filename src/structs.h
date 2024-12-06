@@ -10,6 +10,9 @@ struct SmoothTransition {
 };
 
 struct Color {
+    Color(byte r, byte g, byte b);
+    Color(Color & color);
+    Color();
     byte r;
     byte g;
     byte b;

@@ -35,8 +35,9 @@ void EffectRain::playFrame() {
         // Капля падает
         drop->turn--;
         unsigned turnPos = map(drop->turnPos, 0, turns[0], 0, turns[drop->turn]);
+        Color * colorPtr = new Color(color);
         strip.setFgLayerColor(
-            getAbsoluteIndex(drop->turn, turnPos), &color);
+            getAbsoluteIndex(drop->turn, turnPos), colorPtr);
     }
 
     // Создаем новую каплю

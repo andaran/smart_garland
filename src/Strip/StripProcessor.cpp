@@ -115,6 +115,7 @@ void StripProcessor::setFgLayerState(bool state) {
 
 void StripProcessor::clearFgLayer() {
     for (int i = 0; i < NUM_LEDS; i++) {
+        delete fgLayer[i];
         fgLayer[i] = nullptr;
     }
 }
