@@ -1,7 +1,7 @@
 #include "Rain.h"
 
 EffectRain::EffectRain(StripProcessor & strip, 
-    Color color) : Effect(strip, 300) {
+    Color color) : Effect(strip, 500) {
     
     this->color = color;
 
@@ -12,12 +12,38 @@ EffectRain::EffectRain(StripProcessor & strip,
 
 EffectRain::~EffectRain() {
     delete backgroundEffect;
+    for (int i = 0; i < drops.size(); i++) {
+        delete drops[i];
+    }
     strip.setFgLayerState(false);
 }
 
 void EffectRain::playFrame() {
     strip.clearFgLayer();
-    int index = random(NUM_LEDS);
-    strip.setFgLayerColor(index, &color);
+
+    for (int i = 0; i < drops.size(); i++) {
+        Drop * drop = drops[i];
+
+        // Капля упала
+        if (drop->turn == 0) {
+            delete drop;
+            drops.erase(drops.begin() + i);
+            i--;
+            continue;
+        }
+
+        // Капля падает
+        drop->turn--;
+        unsigned turnPos = map(drop->turnPos, 0, turns[0], 0, turns[drop->turn]);
+        strip.setFgLayerColor(
+            getAbsoluteIndex(drop->turn, turnPos), &color);
+    }
+
+    // Создаем новую каплю
+    Drop * drop = new Drop();
+    drop->turn = turns.size();
+    drop->turnPos = random(turns[0]);
+    drops.push_back(drop);
+
     strip.show();
 }

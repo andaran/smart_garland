@@ -5,7 +5,6 @@
 #include <vector>
 
 #include "../Effects/Effect.h"
-//#include "../Effects/PaletteEffect.h"
 #include "../Effects/createEffect.h"
 #include "../Strip/StripProcessor.h"
 #include "settings.h"
@@ -37,8 +36,6 @@ public:
 
     void begin();
     void tick();
-
-    //static Effect * createEffect(StripProcessor & strip, String name);
 
 private:
     StripProcessor & strip;

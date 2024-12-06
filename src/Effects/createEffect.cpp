@@ -54,7 +54,11 @@ Effect * createEffect(StripProcessor & strip, String name) {
         strip, {232, 65, 24}, {76, 209, 55});
 
     // Эффекты - дождь (с бэкграундом)
-    if (name == "rain") return new EffectRain(strip, {255, 0, 0});
+    if (name == "rain") return new EffectRain(strip, {0, 0, 255});
+    if (name == "snow") return new EffectRain(strip, {255, 255, 255});
+    if (name == "acid-rain") return new EffectRain(strip, {76, 209, 55});
+    if (name == "bite-a-lemon") return new EffectRain(strip, {254, 211, 48});
+    if (name == "hell-rain") return new EffectRain(strip, {232, 65, 24});
 
     return nullptr;
 }
