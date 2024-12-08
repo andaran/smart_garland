@@ -18,6 +18,7 @@ String CmdsProcessor::processCmds(String cmd) {
     String cmdArgs = spaceIndex == -1 ? "" : cmd.substring(spaceIndex + 1);
 
     if (cmdName == "setup") return setup(cmdArgs);
+    if (cmdName == "save") return save(cmdArgs);
     if (cmdName == "memory") return memory(cmdArgs);
     if (cmdName == "fs") return fs(cmdArgs);
     if (cmdName == "stream") return stream(cmdArgs);
@@ -264,7 +265,7 @@ String CmdsProcessor::turns(String const & cmdArgs) {
 /////////////////////////////
 
 String CmdsProcessor::setup(String const & cmdArgs) {
-    // setup animation <name>
+    // setup anim <name>
     // setup text <name>
     // setup done
 
@@ -281,7 +282,7 @@ String CmdsProcessor::setup(String const & cmdArgs) {
     String cmdArgs2 = spaceIndex == -1 ? "" : 
         cmdArgs.substring(spaceIndex + 1);
 
-    if (cmdName == "animation") {
+    if (cmdName == "anim") {
         cmdsState = SETUP_ANIMATION;
         setupName = cmdArgs2;
         effectsProcessor.setupAnimation(cmdArgs2);
@@ -293,7 +294,20 @@ String CmdsProcessor::setup(String const & cmdArgs) {
         return "Setup text " + cmdArgs2;
     }
 
-    return "Unknown command";
+    return "Invalid command";
+}
+
+String CmdsProcessor::save(String const & cmdArgs) {
+    switch (cmdsState) {
+        case SETUP_ANIMATION:
+            static_cast<SetupAnimation*>(effectsProcessor.getEffectPtr())->save();
+            return "Animation saved";
+        case SETUP_TEXT:
+            // static_cast<SetupText*>(effectsProcessor.getEffectPtr())->save();
+            return "Text saved";
+        default:
+            return "Invalid command";
+    }
 }
 
 //////////////////////////////////
@@ -345,7 +359,7 @@ String CmdsProcessor::led(String const & cmdArgs) {
         return "Led removed";
     }
 
-    return "Unknown command";
+    return "Invalid command";
 }
 
 String CmdsProcessor::background(String const & cmdArgs) {

@@ -44,7 +44,11 @@ private:
     String slideshow(String const & cmdArgs);
     String memory(String const & cmdArgs);
     String turns(String const & cmdArgs);
+
+    // Универсальные команды
     String setup(String const & cmdArgs);
+    String save(String const & cmdArgs);
+
     // Комманды настроек анимации
     String led(String const & cmdArgs);
     String background(String const & cmdArgs);

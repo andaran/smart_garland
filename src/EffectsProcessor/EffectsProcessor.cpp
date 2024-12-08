@@ -11,13 +11,13 @@ EffectsProcessor::EffectsProcessor(StripProcessor & strip) : strip(strip) {
         "bite-a-lemon", "hell-rain"
     };
 
-    settings = {"random", false, 30};
+    settings = {"test", false, 30};
 }
 
 void EffectsProcessor::begin() {
     // Загружаем настройки
     Storage::load("effects-settings", [this](JsonDocument & doc) {
-        settings.name = doc["name"] | "random";
+        settings.name = doc["name"] | "test";
         settings.slideshow = doc["slideshow"] | false;
         settings.timeout = doc["timeout"] | 30;
     });
