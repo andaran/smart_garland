@@ -32,6 +32,7 @@ String CmdsProcessor::processCmds(String cmd) {
             break;
         case SETUP_ANIMATION:
             if (cmdName == "led") return led(cmdArgs);
+            if (cmdName == "background") return background(cmdArgs);
             break;
     }
     return "Unknown command";
@@ -345,4 +346,17 @@ String CmdsProcessor::led(String const & cmdArgs) {
     }
 
     return "Unknown command";
+}
+
+String CmdsProcessor::background(String const & cmdArgs) {
+    // background <name>
+    // background remove
+    if (cmdArgs == "remove") {
+        static_cast<SetupAnimation*>(effectsProcessor.getEffectPtr())
+            ->removeBackground();
+        return "Background removed";
+    }
+    static_cast<SetupAnimation*>(effectsProcessor.getEffectPtr())
+        ->addBackground(cmdArgs);
+    return "Background added";
 }

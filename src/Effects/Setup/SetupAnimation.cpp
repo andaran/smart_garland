@@ -1,7 +1,7 @@
 #include "SetupAnimation.h"
 
 SetupAnimation::SetupAnimation(StripProcessor & strip, 
-    String name) : Effect(strip, 200) {
+    String name) : Effect(strip, 50) {
 
     strip.clear();
     strip.show();
@@ -18,6 +18,7 @@ SetupAnimation::SetupAnimation(StripProcessor & strip,
 
     backgroundEffect = createEffect(strip, animation.background);
     strip.setFgLayerState(true);
+    strip.clearFgLayer();
 }
 
 SetupAnimation::~SetupAnimation() {
@@ -25,7 +26,7 @@ SetupAnimation::~SetupAnimation() {
 }
 
 void SetupAnimation::playFrame() {
-    strip.clearFgLayer();
+    //strip.clearFgLayer();
 
     // Отрисовываем кадр
     if (animation.frames.size() == 0) {
@@ -34,8 +35,9 @@ void SetupAnimation::playFrame() {
     }
     for (int i = 0; i < animation.frames[frame].size(); i++) {
         std::array<unsigned, 4> led = animation.frames[frame][i];
-        Color * color = new Color(led[1], led[2], led[3]);
-        strip.setFgLayerColor(led[0], color);
+        strip.updateFgLayerColor(led[0], led[1], led[2], led[3]);
+        //Color * color = new Color(led[1], led[2], led[3]);
+        //strip.setFgLayerColor(led[0], color);
     }
 
     strip.show();
@@ -46,6 +48,7 @@ void SetupAnimation::addLed(int i, byte r, byte g, byte b) {
     if (!animation.frames.size()) {
         animation.frames.push_back({});
     }
+    removeLed(i);
     animation.frames[frame].push_back(colors);
     saveAnimation();
 }
@@ -56,10 +59,25 @@ void SetupAnimation::removeLed(int i) {
         if (animation.frames[frame][j][0] == i) {
             animation.frames[frame].erase(animation.frames[frame].begin() + j);
             saveAnimation();
+            strip.removeFgLayerColor(i);
             strip.stealthClear();
             return;
         }
     }
+}
+
+void SetupAnimation::addBackground(String name) {
+    animation.background = name;
+    saveAnimation();
+    delete backgroundEffect;
+    backgroundEffect = createEffect(strip, name);
+}
+
+void SetupAnimation::removeBackground() {
+    animation.background = "";
+    saveAnimation();
+    delete backgroundEffect;
+    backgroundEffect = nullptr;
 }
 
 void SetupAnimation::loadAnimation(String name) {

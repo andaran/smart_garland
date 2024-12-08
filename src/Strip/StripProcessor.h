@@ -32,6 +32,8 @@ public:
     void setFgLayerState(bool state);
     void clearFgLayer();
     void setFgLayerColor(int i, Color * color);
+    void removeFgLayerColor(int i);
+    void updateFgLayerColor(int i, byte r, byte g, byte b);
 
 private:
     Color * fgLayer[NUM_LEDS];

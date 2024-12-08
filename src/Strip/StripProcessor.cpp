@@ -127,3 +127,20 @@ void StripProcessor::clearFgLayer() {
 void StripProcessor::setFgLayerColor(int i, Color * color) {
     fgLayer[i] = color;
 }
+
+void StripProcessor::updateFgLayerColor(int i, byte r, byte g, byte b) {
+    if (fgLayer[i] != nullptr &&
+        fgLayer[i]->r == r && 
+        fgLayer[i]->g == g && 
+        fgLayer[i]->b == b) {
+        return;
+    }
+
+    delete fgLayer[i];
+    fgLayer[i] = new Color(r, g, b);
+}
+
+void StripProcessor::removeFgLayerColor(int i) {
+    delete fgLayer[i];
+    fgLayer[i] = nullptr;
+}

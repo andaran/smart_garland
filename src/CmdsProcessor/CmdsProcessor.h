@@ -45,5 +45,7 @@ private:
     String memory(String const & cmdArgs);
     String turns(String const & cmdArgs);
     String setup(String const & cmdArgs);
+    // Комманды настроек анимации
     String led(String const & cmdArgs);
+    String background(String const & cmdArgs);
 };

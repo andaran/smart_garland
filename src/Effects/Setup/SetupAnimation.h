@@ -27,12 +27,15 @@ public:
 
     void addLed(int i, byte r, byte g, byte b);
     void removeLed(int i);
+    void addBackground(String name);
+    void removeBackground();
     
 private:
     void playFrame() override;
     void loadAnimation(String name);
     void saveAnimation();
 
+    Color * colors[NUM_LEDS];
     Animation animation;
     byte frame = 0;
 };
