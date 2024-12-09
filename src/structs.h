@@ -17,3 +17,9 @@ struct Color {
     byte g;
     byte b;
 };
+
+struct Animation {
+    String background;
+    unsigned duration = 200;
+    unsigned frames = 1;
+};

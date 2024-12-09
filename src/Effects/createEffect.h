@@ -1,5 +1,7 @@
 #pragma once
 
+#include <LittleFS.h>
+
 #include "Effect.h"
 #include "../Strip/StripProcessor.h"
 
@@ -8,5 +10,6 @@
 #include "Stripes/Stripes.h"
 #include "Rain/Rain.h"
 #include "Palette/PaletteEffect.h"
+#include "Animation/Animation.h"
 
 Effect * createEffect(StripProcessor & strip, String name);

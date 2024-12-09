@@ -3,11 +3,7 @@
 #include "Effect.h"
 #include <LittleFS.h>
 
-struct Animation {
-    String background;
-    unsigned duration = 200;
-    unsigned frames = 1;
-};
+#include "structs.h"
 
 class AnimEffect : public Effect {
 public:

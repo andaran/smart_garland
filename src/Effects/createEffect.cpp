@@ -60,5 +60,11 @@ Effect * createEffect(StripProcessor & strip, String name) {
     if (name == "bite-a-lemon") return new EffectRain(strip, {254, 211, 48});
     if (name == "hell-rain") return new EffectRain(strip, {232, 65, 24});
 
+    // Анимации
+    if (name.startsWith("anim-")) {
+        if (!LittleFS.exists(name)) return nullptr;
+        return new EffectAnimation(strip, name.substring(5));
+    }
+
     return nullptr;
 }
