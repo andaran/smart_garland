@@ -21,6 +21,10 @@ public:
     void addBackground(String name);
     void removeBackground();
     void save();
+    void nextFrame();
+    void prevFrame();
+    void deleteFrame();
+    String getFrame();
     
 private:
     void playFrame() override;

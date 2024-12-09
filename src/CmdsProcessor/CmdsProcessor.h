@@ -52,4 +52,5 @@ private:
     // Комманды настроек анимации
     String led(String const & cmdArgs);
     String background(String const & cmdArgs);
+    String frame(String const & cmdArgs);
 };

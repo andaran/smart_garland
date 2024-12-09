@@ -34,6 +34,7 @@ String CmdsProcessor::processCmds(String cmd) {
         case SETUP_ANIMATION:
             if (cmdName == "led") return led(cmdArgs);
             if (cmdName == "background") return background(cmdArgs);
+            if (cmdName == "frame") return frame(cmdArgs);
             break;
     }
     return "Unknown command";
@@ -373,4 +374,31 @@ String CmdsProcessor::background(String const & cmdArgs) {
     static_cast<SetupAnimation*>(effectsProcessor.getEffectPtr())
         ->addBackground(cmdArgs);
     return "Background added";
+}
+
+String CmdsProcessor::frame(String const & cmdArgs) {
+    // frame
+    // frame next
+    // frame prev
+    // frame delete
+    if (cmdArgs == "") {
+        return static_cast<SetupAnimation*>(effectsProcessor.getEffectPtr())
+            ->getFrame();
+    }
+    if (cmdArgs == "next") {
+        static_cast<SetupAnimation*>(effectsProcessor.getEffectPtr())
+            ->nextFrame();
+        return "Selected next frame";
+    }
+    if (cmdArgs == "prev") {
+        static_cast<SetupAnimation*>(effectsProcessor.getEffectPtr())
+            ->prevFrame();
+        return "Selected previous frame";
+    }
+    if (cmdArgs == "delete") {
+        static_cast<SetupAnimation*>(effectsProcessor.getEffectPtr())
+            ->deleteFrame();
+        return "Frame deleted";
+    }
+    return "Invalid command";
 }
