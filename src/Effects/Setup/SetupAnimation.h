@@ -25,6 +25,8 @@ public:
     void prevFrame();
     void deleteFrame();
     String getFrame();
+    void setDuration(unsigned duration);
+    unsigned getDuration();
     
 private:
     void playFrame() override;

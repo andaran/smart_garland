@@ -35,6 +35,7 @@ String CmdsProcessor::processCmds(String cmd) {
             if (cmdName == "led") return led(cmdArgs);
             if (cmdName == "background") return background(cmdArgs);
             if (cmdName == "frame") return frame(cmdArgs);
+            if (cmdName == "duration") return duration(cmdArgs);
             break;
     }
     return "Unknown command";
@@ -401,4 +402,20 @@ String CmdsProcessor::frame(String const & cmdArgs) {
         return "Frame deleted";
     }
     return "Invalid command";
+}
+
+String CmdsProcessor::duration(String const & cmdArgs) {
+    // duration <duration>
+    if (cmdArgs == "") {
+        return "Duration is " + 
+            String(static_cast<SetupAnimation*>(effectsProcessor.getEffectPtr())
+                ->getDuration());
+    }
+    unsigned duration = cmdArgs.toInt();
+    if (duration <= 0) {
+        return "Invalid duration";
+    }
+    static_cast<SetupAnimation*>(effectsProcessor.getEffectPtr())
+        ->setDuration(duration);
+    return "Duration set to " + String(duration);
 }

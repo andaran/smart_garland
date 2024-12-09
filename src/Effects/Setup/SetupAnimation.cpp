@@ -110,3 +110,12 @@ void SetupAnimation::deleteFrame() {
 String SetupAnimation::getFrame() {
     return "Frame " + String(frame + 1) + " of " + String(animation.frames);
 }
+
+void SetupAnimation::setDuration(unsigned duration) {
+    animation.duration = duration;
+    saveAnimation();
+}
+
+unsigned SetupAnimation::getDuration() {
+    return animation.duration;
+}
