@@ -22,6 +22,7 @@ String CmdsProcessor::processCmds(String cmd) {
     if (cmdName == "memory") return memory(cmdArgs);
     if (cmdName == "fs") return fs(cmdArgs);
     if (cmdName == "stream") return stream(cmdArgs);
+    if (cmdName == "remove") return remove(cmdArgs);
     switch (cmdsState) {
         case INITAL:
             if (cmdName == "effect") return effect(cmdArgs);
@@ -310,6 +311,31 @@ String CmdsProcessor::save(String const & cmdArgs) {
         default:
             return "Invalid command";
     }
+}
+
+String CmdsProcessor::remove(String const & cmdArgs) {
+    // remove anim <name>
+    // remove text <name>
+
+    // Команды с несколькими аргументами
+    int spaceIndex = cmdArgs.indexOf(" ");
+    String cmdName = cmdArgs.substring(0, spaceIndex);
+    String cmdArgs2 = spaceIndex == -1 ? "" : 
+        cmdArgs.substring(spaceIndex + 1);
+
+    if (cmdName != "anim" && cmdName != "text") {
+        return "Invalid command";
+    }
+
+    String filenamePrefix = cmdName + "-" + cmdArgs2;
+    Dir dir = LittleFS.openDir("/");
+    while (dir.next()) {
+        String filename = dir.fileName();
+        if (filename.startsWith(filenamePrefix)) {
+            LittleFS.remove(filename);
+        }
+    }
+    return "Animation removed";
 }
 
 //////////////////////////////////

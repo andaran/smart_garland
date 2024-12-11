@@ -48,6 +48,7 @@ private:
     // Универсальные команды
     String setup(String const & cmdArgs);
     String save(String const & cmdArgs);
+    String remove(String const & cmdArgs);
 
     // Комманды настроек анимации
     String led(String const & cmdArgs);
