@@ -26,7 +26,9 @@ void EffectAnimation::playFrame() {
         }
     }
 
-    strip.show();
+    if (!backgroundEffect) {
+        strip.show();
+    }
     nextFrame();
 }
 
