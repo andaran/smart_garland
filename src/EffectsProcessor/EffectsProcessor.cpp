@@ -89,6 +89,7 @@ void EffectsProcessor::slideshowOn(unsigned timeout) {
 
 void EffectsProcessor::slideshowOff() {
     settings.slideshow = false;
+    saveSettings();
 }
 
 // Анимации
