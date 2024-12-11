@@ -7,7 +7,6 @@ EffectRain::EffectRain(StripProcessor & strip,
 
     // Задаем фоновый эффект
     backgroundEffect = createEffect(strip, "fog");
-    strip.setFgLayerState(true);
 }
 
 EffectRain::~EffectRain() {
@@ -15,7 +14,7 @@ EffectRain::~EffectRain() {
     for (int i = 0; i < drops.size(); i++) {
         delete drops[i];
     }
-    strip.setFgLayerState(false);
+    strip.clearFgLayer();
 }
 
 void EffectRain::playFrame() {

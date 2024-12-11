@@ -113,11 +113,9 @@ bool StripProcessor::getStripState() {
 }
 
 // Foreground layer
-void StripProcessor::setFgLayerState(bool state) {
-    fgLayerActive = state;
-}
 
 void StripProcessor::clearFgLayer() {
+    fgLayerActive = false;
     for (int i = 0; i < NUM_LEDS; i++) {
         delete fgLayer[i];
         fgLayer[i] = nullptr;
@@ -125,10 +123,12 @@ void StripProcessor::clearFgLayer() {
 }
 
 void StripProcessor::setFgLayerColor(int i, Color * color) {
+    fgLayerActive = true;
     fgLayer[i] = color;
 }
 
 void StripProcessor::updateFgLayerColor(int i, byte r, byte g, byte b) {
+    fgLayerActive = true;
     if (fgLayer[i] != nullptr &&
         fgLayer[i]->r == r && 
         fgLayer[i]->g == g && 
@@ -141,6 +141,7 @@ void StripProcessor::updateFgLayerColor(int i, byte r, byte g, byte b) {
 }
 
 void StripProcessor::removeFgLayerColor(int i) {
+    fgLayerActive = true;
     delete fgLayer[i];
     fgLayer[i] = nullptr;
 }

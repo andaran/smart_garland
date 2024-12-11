@@ -24,13 +24,11 @@ AnimEffect::AnimEffect(StripProcessor & strip, String name)
         ledColors[i] = 0;
     }
 
-    strip.setFgLayerState(true);
     strip.clearFgLayer();
 }
 
 AnimEffect::~AnimEffect() {
     strip.clearFgLayer();
-    strip.setFgLayerState(false);
 }
 
 void AnimEffect::saveAnimation() {

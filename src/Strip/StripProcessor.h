@@ -29,7 +29,6 @@ public:
     bool getStripState();
 
     // Foreground layer
-    void setFgLayerState(bool state);
     void clearFgLayer();
     void setFgLayerColor(int i, Color * color);
     void removeFgLayerColor(int i);
