@@ -23,3 +23,8 @@ struct Animation {
     unsigned duration = 200;
     unsigned frames = 1;
 };
+
+struct ColorPoint {
+    byte position; // Позиция в градиенте (0-255)
+    byte r, g, b;  // Цвет (RGB)
+};

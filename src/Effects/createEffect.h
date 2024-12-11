@@ -2,6 +2,8 @@
 
 #include <LittleFS.h>
 
+#include "palettes.h"
+
 #include "Effect.h"
 #include "../Strip/StripProcessor.h"
 

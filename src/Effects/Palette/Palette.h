@@ -1,11 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
-
-struct ColorPoint {
-    byte position; // Позиция в градиенте (0-255)
-    byte r, g, b;  // Цвет (RGB)
-};
+#include "structs.h"
 
 class Palette {
 public:
