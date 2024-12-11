@@ -22,6 +22,15 @@ void EffectsProcessor::begin() {
         settings.timeout = doc["timeout"] | 30;
     });
 
+    // Загружаем пользовательские анимации
+    Dir dir = LittleFS.openDir("/");
+    while (dir.next()) {
+        String fileName = dir.fileName();
+        if (!fileName.startsWith("anim-")) continue;
+        if (fileName.lastIndexOf("-") != 4) continue;
+        effects.push_back(fileName);
+    }
+
     setEffect(settings.name);
     if (settings.slideshow) {
         slideshowOn();
