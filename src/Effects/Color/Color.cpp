@@ -3,11 +3,7 @@
 EffectColor::EffectColor(StripProcessor & strip, Color color) 
     : Effect(strip, 20) {
 
-    brightness = strip.getBrightness();
-    brightnessKoef = brightness / 255.0;
-    this->color.r = color.r * brightnessKoef;
-    this->color.g = color.g * brightnessKoef;
-    this->color.b = color.b * brightnessKoef;
+    this->color = color;
     
     // Заполняем значения цвеов пикселей
     for (int i = 0; i < NUM_LEDS; i++) {
@@ -15,12 +11,6 @@ EffectColor::EffectColor(StripProcessor & strip, Color color)
         pixels[i].direction = random(2);
     }
 
-    strip.stealthClear();
-    strip.getStrip().setBrightness(255);
-}
-
-EffectColor::~EffectColor() {
-    strip.getStrip().setBrightness(brightness);
     strip.stealthClear();
 }
 

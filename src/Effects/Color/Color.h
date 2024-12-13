@@ -17,13 +17,10 @@ struct PixelState {
 class EffectColor : public Effect {
 public:
     EffectColor(StripProcessor & strip, Color color);
-    ~EffectColor();
     
 private:
     void playFrame() override;
 
     Color color;
-    double brightnessKoef;
-    byte brightness;
     PixelState pixels[NUM_LEDS];
 };
