@@ -5,6 +5,9 @@ Effect * createEffect(StripProcessor & strip, String name) {
     if (name == "test") return new EffectTest(strip);
     if (name == "rainbow") return new EffectRainbow(strip);
 
+    // Мерцающий цвет
+    if (name == "color-red") return new EffectColor(strip, {255, 0, 0});
+
     // Эффекты на основе палитр (по вертикали)
     if (name == "cyberpunk") return new PaletteEffect(
         strip, 50, CYBERPUNK_PALETTE, CYBERPUNK_PALETTE_SIZE);

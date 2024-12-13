@@ -13,5 +13,6 @@
 #include "Rain/Rain.h"
 #include "Palette/PaletteEffect.h"
 #include "Animation/Animation.h"
+#include "Color/Color.h"
 
 Effect * createEffect(StripProcessor & strip, String name);
