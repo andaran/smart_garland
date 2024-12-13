@@ -6,7 +6,14 @@ Effect * createEffect(StripProcessor & strip, String name) {
     if (name == "rainbow") return new EffectRainbow(strip);
 
     // Мерцающий цвет
-    if (name == "color-red") return new EffectColor(strip, {255, 0, 0});
+    if (name == "cherry") return new EffectColor(strip, {255, 0, 0});
+    if (name == "lime") return new EffectColor(strip, {76, 209, 55});
+    if (name == "blueberry") return new EffectColor(strip, {155, 89, 182});
+    if (name == "gold") return new EffectColor(strip, {255, 141, 10});
+    if (name == "deep") return new EffectColor(strip, {27, 20, 100});
+    if (name == "peony") return new EffectColor(strip, {252, 66, 123});
+    if (name == "dream") return new EffectColor(strip, {15, 188, 249});
+    if (name == "lemongrass") return new EffectColor(strip, {16, 255, 50});
 
     // Эффекты на основе палитр (по вертикали)
     if (name == "cyberpunk") return new PaletteEffect(
