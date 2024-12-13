@@ -2,10 +2,23 @@
 
 Effect::Effect(StripProcessor & strip, unsigned long timeout) : 
     strip(strip), timeout(timeout), timer(millis()) {
+    loadTurns();
+}
 
+void Effect::loadTurns() {
     // Заполняем массив витков
+
+    if (!Storage::exists("turns")) {
+        Storage::save("turns", [this](JsonDocument & doc) {
+            doc["size"] = 1;
+            JsonArray turns = doc.createNestedArray("turns");
+            turns.add(NUM_LEDS);
+        });
+    }
+
     Storage::load("turns", [this](JsonDocument & doc) {
         int size = doc["size"];
+        turns.clear();
         for (int i = 0; i < size; i++) {
             turns.push_back(doc["turns"][i]);
         }

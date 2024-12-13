@@ -30,13 +30,15 @@ String CmdsProcessor::processCmds(String cmd) {
             if (cmdName == "brightness") return brightness(cmdArgs);
             if (cmdName == "timer") return timer(cmdArgs);
             if (cmdName == "slideshow") return slideshow(cmdArgs);
-            if (cmdName == "turns") return turns(cmdArgs);
             break;
         case SETUP_ANIMATION:
             if (cmdName == "led") return led(cmdArgs);
             if (cmdName == "background") return background(cmdArgs);
             if (cmdName == "frame") return frame(cmdArgs);
             if (cmdName == "duration") return duration(cmdArgs);
+            break;
+        case SETUP_MODEL:
+            if (cmdName == "turns") return turns(cmdArgs);
             break;
     }
     return "Unknown command";
@@ -227,42 +229,6 @@ String CmdsProcessor::memory(String const & cmdArgs) {
     return status;
 }
 
-// Обновить количества светодиодов в каждом из витков
-String CmdsProcessor::turns(String const & cmdArgs) {
-    // cmdArgs = "1 2 3 4 5 6 7 8 9 10"
-    std::vector<int> turns;
-    int spaceIndex = 0;
-    while (spaceIndex != -1) {
-        int nextSpaceIndex = cmdArgs.indexOf(" ", spaceIndex + 1);
-        String turn = cmdArgs.substring(spaceIndex, nextSpaceIndex);
-        turns.push_back(turn.toInt());
-        spaceIndex = nextSpaceIndex;
-    }
-
-    // Валидация
-    int count = 0;
-    for (int i = 0; i < turns.size(); i++) {
-        if (turns[i] < 0) {
-            return "Invalid turn number";
-        }
-        count += turns[i];
-    }
-    if (count != NUM_LEDS) {
-        return "Invalid turns count";
-    }
-
-    // Сохраняем в память
-    Storage::save("turns", [&turns](JsonDocument & doc) {
-        JsonArray arr = doc.createNestedArray("turns");
-        for (int i = 0; i < turns.size(); i++) {
-            arr.add(turns[i]);
-        }
-        doc["size"] = turns.size();
-    });
-
-    return "Turns updated";
-}
-
 /////////////////////////////
 /// Универсальные команды ///
 /////////////////////////////
@@ -291,10 +257,10 @@ String CmdsProcessor::setup(String const & cmdArgs) {
         effectsProcessor.setupAnimation(cmdArgs2);
         return "Setup animation " + cmdArgs2;
     }
-    if (cmdName == "text") {
-        cmdsState = SETUP_TEXT;
-        setupName = cmdArgs2;
-        return "Setup text " + cmdArgs2;
+    if (cmdName == "model") {
+        cmdsState = SETUP_MODEL;
+        effectsProcessor.setupModel();
+        return "Setup turns " + cmdArgs2;
     }
 
     return "Invalid command";
@@ -305,9 +271,6 @@ String CmdsProcessor::save(String const & cmdArgs) {
         case SETUP_ANIMATION:
             static_cast<SetupAnimation*>(effectsProcessor.getEffectPtr())->save();
             return "Animation saved";
-        case SETUP_TEXT:
-            // static_cast<SetupText*>(effectsProcessor.getEffectPtr())->save();
-            return "Text saved";
         default:
             return "Invalid command";
     }
@@ -444,4 +407,47 @@ String CmdsProcessor::duration(String const & cmdArgs) {
     static_cast<SetupAnimation*>(effectsProcessor.getEffectPtr())
         ->setDuration(duration);
     return "Duration set to " + String(duration);
+}
+
+/////////////////////////////////////
+/// Команды настройки модели ёлки ///
+/////////////////////////////////////
+
+String CmdsProcessor::turns(String const & cmdArgs) {
+    // Обновить количества светодиодов в каждом из витков
+    // cmdArgs = "1 2 3 4 5 6 7 8 9 10"
+    std::vector<int> turns;
+    int spaceIndex = 0;
+    while (spaceIndex != -1) {
+        int nextSpaceIndex = cmdArgs.indexOf(" ", spaceIndex + 1);
+        String turn = cmdArgs.substring(spaceIndex, nextSpaceIndex);
+        turns.push_back(turn.toInt());
+        spaceIndex = nextSpaceIndex;
+    }
+
+    // Валидация
+    int count = 0;
+    for (int i = 0; i < turns.size(); i++) {
+        if (turns[i] < 0) {
+            return "Invalid turn number";
+        }
+        count += turns[i];
+    }
+    if (count != NUM_LEDS) {
+        return "Invalid turns count";
+    }
+
+    // Сохраняем в память
+    Storage::save("turns", [&turns](JsonDocument & doc) {
+        JsonArray arr = doc.createNestedArray("turns");
+        for (int i = 0; i < turns.size(); i++) {
+            arr.add(turns[i]);
+        }
+        doc["size"] = turns.size();
+    });
+
+    // Обновляем модель
+    static_cast<SetupModel*>(effectsProcessor.getEffectPtr())->load();
+
+    return "Turns updated";
 }

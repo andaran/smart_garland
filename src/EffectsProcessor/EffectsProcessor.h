@@ -11,6 +11,7 @@
 #include "structs.h"
 
 #include "../Effects/Setup/SetupAnimation.h"
+#include "../Effects/Setup/SetupModel.h"
 
 #include "../Storage/Storage.h"
 
@@ -36,6 +37,7 @@ public:
     void tick();
 
     void setupAnimation(String name);
+    void setupModel();
     void endSetup();
 
 private:

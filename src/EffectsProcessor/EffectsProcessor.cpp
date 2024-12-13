@@ -93,11 +93,17 @@ void EffectsProcessor::slideshowOff() {
 }
 
 // Анимации
-
 void EffectsProcessor::setupAnimation(String name) {
     slideshowOff();
     delete currentEffect;
     currentEffect = new SetupAnimation(strip, name);
+}
+
+// Настройка модели
+void EffectsProcessor::setupModel() {
+    slideshowOff();
+    delete currentEffect;
+    currentEffect = new SetupModel(strip);
 }
 
 Effect * EffectsProcessor::getEffectPtr() {

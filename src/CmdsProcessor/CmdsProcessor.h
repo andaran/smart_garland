@@ -9,6 +9,7 @@
 #include "../Strip/StripProcessor.h"
 #include "../Storage/Storage.h"
 #include "../Effects/setup/SetupAnimation.h"
+#include "../Effects/setup/SetupModel.h"
 
 class CmdsProcessor {
 public:
@@ -28,7 +29,6 @@ private:
     enum states {
         INITAL,
         SETUP_ANIMATION,
-        SETUP_TEXT,
         SETUP_MODEL
     };
     byte cmdsState = INITAL;

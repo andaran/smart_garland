@@ -22,6 +22,7 @@ protected:
     std::vector<int> turns;
     Effect * backgroundEffect = nullptr;
 
+    void loadTurns();
     byte getTurnNumber(int index);
     int getAbsoluteIndex(byte turn, int index);
 };
