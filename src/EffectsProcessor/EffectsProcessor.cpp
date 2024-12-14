@@ -4,11 +4,12 @@ EffectsProcessor::EffectsProcessor(StripProcessor & strip) : strip(strip) {
 
     // Названия эффектов
     effects = {
-        "test", "rainbow", "cyberpunk", "sunset", "optimus", "warm", "cold", 
+        /*"test",*/ "rainbow", "cyberpunk", "sunset", "optimus", "warm", "cold", 
         "hot", "pink", "comfy", "girl", "christmas", "acid", "smoke", 
         "aurora", "redwhite", "ocean", "fog", "candy", "police", "blueberry-candy",
         "lemonade", "mint-candy", "strawberry", "rain", "snow", "acid-rain",
-        "bite-a-lemon", "hell-rain"
+        "bite-a-lemon", "hell-rain", "cherry", "lime", "blueberry", "gold",
+        "deep", "peony", "dream", "lemongrass"
     };
 
     settings = {"test", false, 30};
